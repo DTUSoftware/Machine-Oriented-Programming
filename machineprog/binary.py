@@ -3,7 +3,7 @@ import numpy as np
 
 def binary_to_decimal(binary: str):
     """Returns the decimal value of the binary given."""
-    return int(binary)
+    return int(binary[2:], 2)
 
 
 def decimal_to_binary(decimal: int):
@@ -14,6 +14,10 @@ def decimal_to_binary(decimal: int):
 def adu(binary_1: str, binary_2: str):
     """Adds two binary strings together."""
     return
+
+
+def binary_to_hex(binary: str):
+    return hex(binary_to_decimal(binary))
 
 
 ADU = adu
