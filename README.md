@@ -1,2 +1,2 @@
-# Machine-Oriented-Programming
+# Machine Oriented Programming
 Spring 22
