@@ -1,5 +1,9 @@
 # Custom
 sandbox.py
+sandbox.c
+
+# C
+*.exe
 
 # IDE
 .idea/
