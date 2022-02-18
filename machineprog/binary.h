@@ -2,6 +2,7 @@
 #define __BINARY_H
     #include <string.h>
     #include <stdio.h>
+    #include <stdlib.h>
 
     // The amount of bits that we have per byte
     int BITSIZE = 5;
