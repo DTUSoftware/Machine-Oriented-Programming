@@ -39,9 +39,15 @@
     // Remember to free
     char *binaryWordToChar(BinaryWord* binary) {
         char *binaryChar = (char *)malloc((binary->length+1)*sizeof(char));
-        for (int i = 0; i < binary->length; i++) {
-            binaryChar[i] = binary->bits[i]+'0';
+        for (int i = 0; i <= binary->length; i++) {
+            if (i == binary->length) {
+                binaryChar[i] = '\0';
+            }
+            else {
+                binaryChar[i] = binary->bits[i]+'0';
+            }
         }
+//        memcpy(binaryChar, &binary->bits, binary->length);
         return binaryChar;
     }
 
