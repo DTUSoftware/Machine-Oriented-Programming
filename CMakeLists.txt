@@ -7,4 +7,5 @@ include_directories(machineprog)
 
 add_executable(sandbox
         sandbox.c
-        machineprog/binary.h)
+        machineprog/binary.h
+        machineprog/lc3.h)

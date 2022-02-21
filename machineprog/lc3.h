@@ -5,7 +5,7 @@
     #include <stdlib.h>
     #include "binary.h"
 
-    enum Opcode {
+    typedef enum {
         ADD = 0001,
         AND = 0101,
         BR = 0000,
@@ -24,23 +24,30 @@
         STR = 0111,
         TRAP = 1111,
         UNUSED = 1101
-    };
+    } Opcode;
 
 
 
-    enum Opcode getOpcode(BinaryWord* binary) {
+    Opcode getOpcode(BinaryWord* binary) {
         if (binary->length != 4) {
             printf("Not a valid opcode.");
             return UNUSED;
         }
 
 
-        for (int opcode = ADD; opcode <= UNUSED; opcode++) {
-            switch (opcode) {
-                case ADD:
+//        for (int opcode = ADD; opcode <= UNUSED; opcode++) {
+//            switch (opcode) {
+//                case ADD:
+//                    printf("%d\n", ADD);
+//                default:
+//                    printf("%d\n", opcode);
+//            }
+//        }
 
-            }
-        }
+        printf("int: %d\n", binary->bits);
+        Opcode opcode = (int) binary->bits;
+
+        return opcode;
     }
 
     char binaryToAssembly(BinaryWord binary) {

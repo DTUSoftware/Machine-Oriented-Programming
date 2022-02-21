@@ -52,10 +52,12 @@
     }
 
     // Gets the unsigned long long of the binary word
+    // TODO: fix this, maybe?
     unsigned long long getLongLong(BinaryWord* binary) {
         char *eptr;
         char *binaryChar = binaryWordToChar(binary);
-        unsigned long long result = strtoll(binaryChar, &eptr, 10);
+//        unsigned long long result = strtoll(binaryChar, &eptr, 10);
+        unsigned long long result = atoll(binaryChar);
         free(binaryChar);
 
         if (*eptr) {
@@ -181,6 +183,26 @@
     // using the division method.
     BinaryWord decimalToBinary(int decimal) {
         return decimalToBinaryWithSize(decimal, getBits());
+    }
+
+    BinaryWord charBinaryToBinaryWord(char *binaryString) {
+
+        int size = 0;
+        for (; binaryString[size] != '\0'; size++) {}
+        printf("size of string: %d\n", size);
+
+        BinaryWord binary = newBinaryWordWithSize(size);
+
+        for (int i = 0; i < binary.length; i++) {
+            if (binaryString[i] == '0') {
+                binary.bits[i] = 0;
+            }
+            else {
+                binary.bits[i] = 1;
+            }
+        }
+
+        return binary;
     }
 
 #endif
