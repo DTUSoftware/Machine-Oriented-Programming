@@ -156,7 +156,11 @@ def binary_to_decimal(binary: str):
     if binary.startswith("0b"):
         return int(binary[2:], 2)
     else:
-        return int(binary, 2)
+        # if binary.startswith("1"):
+        #     binary = "1"+binary.lstrip("1")
+        #     binary = '-0b'+binary
+        # return int(binary, 2)
+        return twos_comp(binary)
 
 
 def decimal_to_binary(decimal: int):
@@ -169,8 +173,18 @@ def adu(binary_1: str, binary_2: str):
     return
 
 
+# https://stackoverflow.com/a/9147327
+def twos_comp(binary):
+    """compute the 2's complement of int value val"""
+    val = int(binary, 2)
+    bits = len(binary)
+    if (val & (1 << (bits - 1))) != 0: # if sign bit is set e.g., 8bit: 128-255
+        val = val - (1 << bits)        # compute negative value
+    return val
+
+
 def binary_to_hex(binary: str):
-    return hex(binary_to_decimal(binary))
+    return hex(twos_comp(binary)).upper().replace("0X", "x")
 
 
 ADU = adu
