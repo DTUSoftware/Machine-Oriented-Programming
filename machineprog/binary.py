@@ -153,7 +153,10 @@ def decimal_to_binary2c_division(decimal: int, bits: int = None):
 
 def binary_to_decimal(binary: str):
     """Returns the decimal value of the binary given."""
-    return int(binary[2:], 2)
+    if binary.startswith("0b"):
+        return int(binary[2:], 2)
+    else:
+        return int(binary, 2)
 
 
 def decimal_to_binary(decimal: int):
