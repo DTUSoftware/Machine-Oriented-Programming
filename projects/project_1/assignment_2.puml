@@ -1,0 +1,30 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+    :STRINGZ "Input a 2 digit
+    decimal number:";
+    :Load string into R0;
+    :TRAP x24 (PUTSP)
+    to write to display;
+    :Load newline into R0;
+    :TRAP x24 (PUTSP)
+    to write to display;
+    repeat :TRAP x23 (IN) to get digit;
+        :TRAP x21 (OUT) to echo the digit;
+        :Add x30 (ASCII digit to int) to R0;
+        :Store the integer in a register
+        (first digit = R1, second digit = R2);
+        repeat while (<2 digits read) is (true);
+        -> false;
+    :Store R1 into R3;
+    repeat :Add R1 to R1;
+        :Decrement R3;
+        repeat while (R3 not 0) is (true);
+        -> false;
+    :Add R2 to R1;
+    :Return R1;
+stop
+
+
+@enduml
