@@ -1,0 +1,17 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:Write to the console "Input a
+2 digit decimal number:";
+repeat :Read a digit from the console;
+:Echo the digit;
+repeat while (<2 digits read) is (true);
+-> false;
+:Parse the two ASCII integers into
+their 2's complement counterpart;
+:Return the 2's complement;
+stop
+
+
+@enduml

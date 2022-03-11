@@ -1,0 +1,19 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:A = smaller number
+B = bigger number;
+:Load A into R0
+Load B into R1;
+repeat :Put -R0 into R2;
+    :Put R2+R1 in R2;
+backward :Decrement R1
+Increment R0;
+repeat while (R2 is 0) is (false)
+->true;
+:Put R1 in C;
+stop
+
+
+@enduml

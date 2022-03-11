@@ -1,0 +1,16 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:A = smaller number
+B = bigger number;
+repeat
+backward :Decrement B
+Increment A;
+repeat while (A - B = 0) is (false)
+->true;
+:Return B;
+stop
+
+
+@enduml
