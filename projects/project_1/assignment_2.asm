@@ -1,27 +1,33 @@
         .ORIG x3000
-START   AND     R1, R1, #0
-        AND     R2, R2, #0
-        AND     R3, R3, #0
+START   LD      R5, ASCII
+        LEA     R0, PROMPT
+        TRAP    x22
+        LEA     R0, NEWLINE
+        TRAP    x21
         AND     R4, R4, #0
-        LD      R0, PROMPT
-        TRAP    x24
-        LD      R0, NEWLINE
-        TRAP    x24
-        ADD     R4, R4, #2          ; COUNTER
+        ADD     R4, R4, #2      ; COUNTER
 ;
-READ    TRAP    x23             ; read
+READ    AND     R0, R0, #0
+        TRAP    x23             ; read
         TRAP    x21             ; print
-        ADD     R0, R0, ASCII
+        ADD     R0, R0, R5
         ADD     R4, R4, #-1
-        BRnz    R2
-        LD      R1, R0
+        BRnz    LoadR2
+        ADD     R1, R0, #0
         BRnzp   READ
-R2      LD      R2, R0
-
-MUL
-        TRAP x25
+LoadR2  ADD     R2, R0, #0
+;
+        ADD     R0, R1, #0
+        AND     R3, R3, #0
+        ADD     R3, R3, #9  ; we do it 10 times
+MUL     ADD     R0, R0, R1
+        ADD     R3, R3, #-1
+        BRp     MUL
+;
+END     ADD     R0, R0, R2
+        TRAP    x25
 ;
 NEWLINE .FILL x000A
-ASCII   .FILL x0030
-PROMPT  .STRINGZ ´´Input a 2 digit decimal number:´´
+ASCII   .FILL xFFD0 ; inverse of x0030
+PROMPT  .STRINGZ "Input a 2 digit decimal number:"
         .END
