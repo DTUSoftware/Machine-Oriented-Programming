@@ -1,0 +1,27 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+    :The input number is
+    provided in R0 at start;
+
+
+    if (R0 == 2) then (true)
+        :R0 = 1;
+        stop
+    else (false)
+        if (modulo-2 of R0) then (0);
+            :Save R1 in stack;
+            :R1 = 0;
+
+            while (R1 > sqrt(R0) and modulo-(3+R1) of R0 not 0) equals (true)
+                :R1 = R1+2;
+            endwhile (false)
+        else (not 0)
+            :R0 = 0;
+            stop
+        endif
+    endif
+
+
+@enduml
