@@ -45,9 +45,9 @@ MUL     ; save registers
         LD      R2, R0, #0
         ADD     R1, R1, #-1  ; if we want 10 times, we need to do it 9 times
 ;
-doMUL   ADD     R0, R0, R2
+repMUL  ADD     R0, R0, R2
         ADD     R1, R1, #-1
-        BRp     doMUL
+        BRp     repMUL
 ;
 ; restore registers
         LDR     R2, R6, #0  ; restore R2
@@ -56,5 +56,12 @@ doMUL   ADD     R0, R0, R2
 ;
 ;
 ; takes modulo of two arguments, R0 and R1
-MOD     ;save registers
+; returns 0 if mod-R1 = 0, else returns
+; a negative number
+; you COULD add R1 back to R0 to get the rest
+; aka. a correct modulo
+MOD     NOT     R1, R1
+        ADD     R1, R1, #1
+repM    ADD     R0, R0, R1
+        BRp     repM
         RET
