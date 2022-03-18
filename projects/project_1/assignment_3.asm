@@ -15,9 +15,11 @@ isPrime ;save registers
         ADD     R6, R6, #-1 ; store R3 (storage)
         STR     R3, R6, #0  ; onto the stack
 ;
-; check if R0 is 2
+; check if R0 is 2 (prime) - or is less than 2 (not prime)
         ADD     R0, R0, #-2 ; check if R0
         BRz     YES         ; is equal to 2
+        ADD     R0, R0, #0
+        BRn     NO
         ADD     R0, R0, #2  ; restore R0
 ;
 ; check mod-2 of R0
