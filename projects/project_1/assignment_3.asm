@@ -1,6 +1,7 @@
         .ORIG x3000
-        LEA     R1, isPrime
-        JMP     R1
+        ; initialize user stack pointer
+        LD      R6, US_S
+        JSR     isPrime
         TRAP    x25
 ;
 ; function to check if a given number in
@@ -11,7 +12,7 @@ isPrime ;save registers
         STR     R1, R6, #0  ; onto the stack
         ADD     R6, R6, #-1 ; store R2 (storage)
         STR     R2, R6, #0  ; onto the stack
-        ADD     R6, R6, #-1 ; store R3 (jump)
+        ADD     R6, R6, #-1 ; store R3 (storage)
         STR     R3, R6, #0  ; onto the stack
 ;
 ; check if R0 is 2
@@ -20,40 +21,64 @@ isPrime ;save registers
         ADD     R0, R0, #2  ; restore R0
 ;
 ; check mod-2 of R0
-        LDR     R2, R0, #0  ; store R0 into R2 (modulo will change it)
-        LD      R1, #2      ; set second argument to 2
-        LEA     R3, MOD
-        JMP     R3
+        AND     R2, R2, #0  ; store R0 into R2 (modulo will change it)
+        ADD     R2, R0, #0
+        AND     R1, R1, #0  ; set second argument to 2
+        ADD     R1, R1, #2
+        ADD     R6, R6, #-1 ; store R7 (ret pointer)
+        STR     R7, R6, #0  ; onto the stack
+        JSR     MOD
+        LDR     R7, R6, #0  ; restore R7 (ret pointer)
+        ADD     R6, R6, #1  ; from the stack
         ADD     R0, R0, #0
-        BRnp    NO
-        LDR     R0, R2, #0  ; restore R0 from R2
+        BRz     NO          ; if we can divide by 2, and we already checked that it's not 2, we return no
+        AND     R0, R0, #0  ; restore R0 from R2
+        ADD     R0, R2, #0
 ;
 ; check if prime number
-        LD      R1, #0      ; initialize R1 to 0
-; sqrt check
-checkP  LDR     R2, R0, #0  ; temp storage for R0
-        LDR     R0, R1, #0
-        LEA     R3, MUL
-        JMP     R3          ; check if sqrt(R1) < R0
-        NOT     R0, R0      ; by multiplying it
-        ADD     R0, R0, #1  ; by itself, and adding it
-        ADD     R0, R2, R0  ; to R0 (temp in R2), and checking if negative
-        BRn     YES
-        LDR     R0, R2, #0  ; restore R0 from R2
-; mod check
+        AND     R1, R1, #0  ; initialize R1 to 3
         ADD     R1, R1, #3
-        LEA     R3, MOD
-        JMP     R3
+; sqrt check
+checkP  AND     R2, R2, #0  ; temp storage for R0
+        ADD     R2, R0, #0
+        AND     R3, R3, #0  ; temp storage for R1
+        ADD     R3, R1, #0
+        AND     R0, R0, #0
+        ADD     R0, R1, #0
+        ADD     R6, R6, #-1 ; store R7 (ret pointer)
+        STR     R7, R6, #0  ; onto the stack
+        JSR     MUL         ; check if sqrt(R1) < R0 by multiplying it by itself, and adding it to R0 (temp in R2), and checking if negative
+        LDR     R7, R6, #0  ; restore R7 (ret pointer)
+        ADD     R6, R6, #1  ; from the stack
+        NOT     R0, R0
+        ADD     R0, R0, #1
+        ADD     R0, R2, R0
+        BRn     YES
+        AND     R0, R0, #0  ; restore R0 from R2
+        ADD     R0, R2, #0
+        AND     R1, R1, #0  ; restore R1 from R3
+        ADD     R1, R3, #0
+; mod check
+        ADD     R6, R6, #-1 ; store R7 (ret pointer)
+        STR     R7, R6, #0  ; onto the stack
+        JSR     MOD
+        LDR     R7, R6, #0  ; restore R7 (ret pointer)
+        ADD     R6, R6, #1  ; from the stack
         ADD     R0, R0, #0
         BRz     NO
-        ADD     R1, R1, #-1 ; subtract 3 and add 2
+        AND     R0, R0, #0  ; restore R0 from R2 (mod changed it)
+        ADD     R0, R2, #0
+        AND     R1, R1, #0  ; restore R1 from R3 (mod could change it)
+        ADD     R1, R3, #0
+        ADD     R1, R1, #2 ; add 2
         BRnzp   checkP
 ;
 ;
 NO      AND     R0, R0, #0
         BRnzp   RESTORE
 ;
-YES     LD      R0, #1
+YES     AND     R0, R0, #0
+        ADD     R0, R0, #1
 ;
 RESTORE LDR     R1, R6, #0  ; restore R1
         ADD     R6, R6, #1  ; from the stack
@@ -68,13 +93,14 @@ RESTORE LDR     R1, R6, #0  ; restore R1
 ; R0 = first number
 ; R1 = second number
 MUL     ; if R1 is 0, return R1
-        LDR     R1, R1, #0
+        ADD     R1, R1, #0
         BRz     endMZ
 ; save registers
         ADD     R6, R6, #-1 ; store R2
         STR     R2, R6, #0  ; onto the stack
 ;
-        LDR     R2, R0, #0  ; load R0 into R2
+        AND     R2, R2, #0  ; load R0 into R2
+        ADD     R2, R0, #0
         ADD     R1, R1, #-1 ; if we want 10 times, we need to do it 9 times
 ;
 repMUL  ADD     R0, R0, R2
@@ -86,7 +112,8 @@ repMUL  ADD     R0, R0, R2
         ADD     R6, R6, #1  ; from the stack
         RET
 ;
-endMZ   LDR     R0, R1, #0
+endMZ   AND     R0, R0, #0
+        ADD     R0, R1, #0
         RET
 ;
 ;
@@ -101,4 +128,5 @@ repM    ADD     R0, R0, R1
         BRp     repM
         RET
 ;
+US_S    .FILL   xFE00       ; the stack pointer   
         .END
