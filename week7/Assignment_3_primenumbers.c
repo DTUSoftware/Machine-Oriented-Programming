@@ -2,12 +2,17 @@
 
 void main(){
     int min, max, isPrime;
-    printf("input a minimum and maximum value\n");
     scanf("%d %d", &min, &max);
-    printf("input was min = %d max = %d \n", min, max);
-    for (int i = min+1; i < max; i++){
-        isPrime = 1;
-        for (int j = 2; j*j <= i; ++j ){
+    if (min<=1){
+        min++;
+    }
+    if( min <= 2 && 2 <= max){
+        printf("%d \n", 2);
+        min = 3;
+    }
+    for (int i = min; i < max; i+=2){
+        isPrime = 1;      
+        for (int j = 3; j*j <= i; j+=2){
             if (i%j==0){
                 isPrime = 0;
                 break;
