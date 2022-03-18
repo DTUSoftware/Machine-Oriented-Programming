@@ -1,11 +1,7 @@
-        .ORIG x3000
-        ; initialize user stack pointer
-        LD      R6, US_S
-        JSR     isPrime
-        TRAP    x25
+; function to check if a given number is a prime number
 ;
-; function to check if a given number in
-; R0 is a prime number
+; input: R0 - the number to check
+; output: R0 - 0 if not prime, 1 if prime
 ;
 isPrime ;save registers
         ADD     R6, R6, #-1 ; store R1 (modulo argument)
@@ -82,11 +78,11 @@ NO      AND     R0, R0, #0
 YES     AND     R0, R0, #0
         ADD     R0, R0, #1
 ;
-RESTORE LDR     R1, R6, #0  ; restore R1
+RESTORE LDR     R3, R6, #0  ; restore R3
         ADD     R6, R6, #1  ; from the stack
         LDR     R2, R6, #0  ; restore R2
         ADD     R6, R6, #1  ; from the stack
-        LDR     R3, R6, #0  ; restore R3
+        LDR     R1, R6, #0  ; restore R1
         ADD     R6, R6, #1  ; from the stack
         RET
 ;
