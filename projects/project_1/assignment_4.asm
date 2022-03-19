@@ -4,10 +4,10 @@
 resultS ADD     R0, R0, #0
         BRz     resSN
         LEA     R0, resP
-        BRnzp   reSP
+        BRnzp   resSP
 resSN   LEA     R0, resNP
 resSP   TRAP    x22
-        LEA     R0, NEWLINE
+        LD      R0, NEWLINE
         TRAP    x21
         RET
 
