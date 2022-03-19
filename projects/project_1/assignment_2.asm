@@ -45,6 +45,8 @@ LoadR2  ADD     R2, R0, #0
         TRAP    x21
 ; change the numbers to decimals
         LD      R5, ASCII
+        NOT     R5, R5
+        ADD     R5, R5, #1
         ADD     R1, R1, R5
         ADD     R2, R2, R5
 ;
