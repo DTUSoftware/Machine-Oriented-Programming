@@ -97,3 +97,9 @@ repMUL  ADD     R0, R0, R2
 endMZ   AND     R0, R0, #0
         ADD     R0, R1, #0
         RET
+;
+; -------------------------- variables for precompile ---------- ;
+;
+NEWLINE .FILL x000A
+ASCII   .FILL x0030
+PROMPT  .STRINGZ "Input a 2 digit decimal number:"

@@ -126,5 +126,4 @@ repM    ADD     R0, R0, R1
         BRp     repM
         RET
 ;
-US_S    .FILL   xFE00       ; the stack pointer   
-        .END
+US_S    .FILL   xFE00       ; the stack pointer
