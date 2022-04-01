@@ -3,6 +3,7 @@ sandbox.py
 sandbox.c
 
 # IDE
+.vscode/
 .idea/
 *.iml
 

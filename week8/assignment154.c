@@ -7,4 +7,5 @@ int main(void){
         if ((echo >= 'a' && echo <= 'z' ) || (echo >= 'A' && echo <= 'Z'))
             printf("%c", echo);
     }
+    return 0;
 }
