@@ -4,10 +4,12 @@ start   JSR     readS
         JSR     isPrime
         JSR     resultS
         BRnzp   start
+US_S    .FILL   xFE00       ; the stack pointer
 ;
 ; --------------------------- Assignment 2 -------------------------------- ;
 ;
-; reads two seperate digits from the input, and makes it into a decimal number
+; reads up to 5 seperate digits from the input, and makes it into a decimal number
+; breaks when nothing is entered
 ;
 ; input: two digits read from input I/O device
 ; output: R0 - the decimal number
@@ -17,48 +19,50 @@ readS   ADD     R6, R6, #-1 ; store used registers onto the stack
         STR     R2, R6, #0
         ADD     R6, R6, #-1
         STR     R3, R6, #0
-        ADD     R6, R6, #-1
-        STR     R4, R6, #0
-        ADD     R6, R6, #-1
-        STR     R5, R6, #0
-;
-        AND     R1, R1, #0
-        AND     R2, R2, #0
-        AND     R3, R3, #0
-        AND     R4, R4, #0
-        AND     R5, R5, #0
 ;
 ; prints console initial output
         LEA     R0, PROMPT
         TRAP    x22
         LD      R0, NEWLINE
         TRAP    x21
-        AND     R4, R4, #0
-        ADD     R4, R4, #2      ; COUNTER
+        AND     R3, R3, #0      ; COUNTER
 ;
+        LD      R2, ASCII       ; ascii to convert to number
+        NOT     R2, R2
+        ADD     R2, R2, #1
 READ    AND     R0, R0, #0
         TRAP    x23             ; read
-        ADD     R4, R4, #-1
-        BRnz    LoadR2
-        ADD     R1, R0, #0
+        TRAP    x21             ; print
+        LD      R1, NEWLINE
+        NOT     R1, R1
+        ADD     R1, R1, #1
+        ADD     R1, R1, R0      ; check if the input is a newline (end of number)
+        BRz     CONVN
+        ADD     R0, R0, R2      ; change the number to decimal
+        BRn     READNN          ; if less than 0, we didn't get a number
+        ADD     R1, R0, #-10
+        BRzp    READNN          ; if larger than 9, we didn't get a number
+        ADD     R6, R6, #-1     ; store the
+        STR     R0, R6, #0      ; decimal on the stack
+        ADD     R3, R3, #1      ; increase COUNTER
+        ADD     R1, R3, #-6     ; check if we inputted
+        BRzp    READTL          ; more than 5 digits
         BRnzp   READ
-LoadR2  ADD     R2, R0, #0
-; print the numbers
-        AND     R0, R0, #0
-        ADD     R0, R1, #0
-        TRAP    x21             ; print
-        AND     R0, R0, #0
-        ADD     R0, R2, #0
-        TRAP    x21             ; print
-        LD      R0, NEWLINE     ; newline after both digits are printed
-        TRAP    x21
-; change the numbers to decimals
-        LD      R5, ASCII
-        NOT     R5, R5
-        ADD     R5, R5, #1
-        ADD     R1, R1, R5
-        ADD     R2, R2, R5
-;
+; add the seperate numbers together
+CONVN   AND     R2, R2, #0  ; to hold the number to return
+        AND     R1, R1, #0  ; initialize multiplier
+        ADD     R1, R1, #1
+CONVNr  LDR     R0, R6, #0  ; load decimal number
+        ADD     R6, R6, #1  ; from the stack
+        ADD     R6, R6, #-1 ; store R7 (ret pointer)
+        STR     R7, R6, #0  ; onto the stack
+        JSR     MUL
+        LDR     R7, R6, #0  ; restore R7 (ret pointer)
+        ADD     R6, R6, #1  ; from the stack
+        ADD     R2, R2, R0  ; add to the final number
+        ADD     R3, R3, #-1 ; decrease COUNTER
+        BRnz    END
+; set multiplier up
         AND     R0, R0, #0
         ADD     R0, R0, #10
         ADD     R6, R6, #-1 ; store R7 (ret pointer)
@@ -66,13 +70,30 @@ LoadR2  ADD     R2, R0, #0
         JSR     MUL
         LDR     R7, R6, #0  ; restore R7 (ret pointer)
         ADD     R6, R6, #1  ; from the stack
+        ADD     R1, R0, #0  ; put new multiplier into R1
+        BRnzp   CONVNr
+; not a number
+READNN  LD      R0, NEWLINE
+        TRAP    x21
+        LEA     R0, resNN
+        TRAP    x22
+        BRnzp   ENDB
+; too long
+READTL  LD      R0, NEWLINE
+        TRAP    x21
+        LEA     R0, resTLI
+        TRAP    x22
 ;
-END     ADD     R0, R0, R2
-        LDR     R5, R6, #0  ; restore registers from the stack
-        ADD     R6, R6, #1
-        LDR     R4, R6, #0
-        ADD     R6, R6, #1
-        LDR     R3, R6, #0
+ENDB    LD      R0, NEWLINE
+        TRAP    x21
+        AND     R2, R2, #0
+        ADD     R2, R2, #-1 ; set final number to -1 (not prime)
+        NOT     R3, R3
+        ADD     R3, R3, #-1
+        ADD     R6, R6, R3  ; remove decimal numbers from from the stack
+;
+END     ADD     R0, R2, #0  ; put final number into return register
+        LDR     R3, R6, #0  ; restore registers from the stack
         ADD     R6, R6, #1
         LDR     R2, R6, #0
         ADD     R6, R6, #1
@@ -195,6 +216,8 @@ MUL     ; if R1 is 0, return R1
 ; save registers
         ADD     R6, R6, #-1 ; store R2
         STR     R2, R6, #0  ; onto the stack
+        ADD     R6, R6, #-1 ; store R1
+        STR     R1, R6, #0  ; onto the stack (we can restore it)
 ;
         AND     R2, R2, #0  ; load R0 into R2
         ADD     R2, R0, #0
@@ -205,6 +228,8 @@ repMUL  ADD     R0, R0, R2
         BRp     repMUL
 ;
 ; restore registers
+        LDR     R1, R6, #0  ; restore R1
+        ADD     R6, R6, #1  ; from the stack
         LDR     R2, R6, #0  ; restore R2
         ADD     R6, R6, #1  ; from the stack
         RET
@@ -229,8 +254,9 @@ repM    ADD     R0, R0, R1
 ;
 NEWLINE .FILL x000A
 ASCII   .FILL x0030
-PROMPT  .STRINGZ "Input a 2 digit decimal number:"
+PROMPT  .STRINGZ "Input a decimal number up to 5 digits:"
 resP    .STRINGZ "The number is prime"
 resNP   .STRINGZ "The number is not prime"
-US_S    .FILL   xFE00       ; the stack pointer
+resNN   .STRINGZ "The input is not a number"
+resTLI  .STRINGZ "The input is too long (max 5 digits)"
         .END

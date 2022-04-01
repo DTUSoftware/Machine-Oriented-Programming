@@ -99,7 +99,7 @@ MUL     ; if R1 is 0, return R1
 ;
         AND     R2, R2, #0  ; load R0 into R2
         ADD     R2, R0, #0
-        ADD     R1, R1, #-1 ; if we want 10 times, we need to do it 9 times
+        AND     R0, R0, #0
 ;
 repMUL  ADD     R0, R0, R2
         ADD     R1, R1, #-1
@@ -126,5 +126,4 @@ repM    ADD     R0, R0, R1
         BRp     repM
         RET
 ;
-US_S    .FILL   xFE00       ; the stack pointer   
-        .END
+US_S    .FILL   xFE00       ; the stack pointer
