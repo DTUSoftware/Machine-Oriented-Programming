@@ -4,6 +4,23 @@
 // LinkedList and Node struct
 
 // Card struct - bool value for face up or down
+typedef enum {
+    CLUBS,
+    DIAMONDS,
+    HEARTS,
+    SPADES
+} CardSuit;
+
+typedef enum {
+    RED,
+    BLACK
+} CardColor;
+
+typedef struct {
+    int number;
+    CardSuit suit;
+} Card;
+
 
 // Game phase enum (startup, etc.)
 
@@ -12,6 +29,10 @@
 
 
 int main() {
+    Card card;
+    card.number = 10;
+    card.suit = CLUBS;
+
     // the moves/executed commands can be stored in a linked list
     // in order to be able to undo commands
 
