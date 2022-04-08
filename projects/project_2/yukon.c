@@ -1,7 +1,17 @@
 #include <stdio.h>
 #include "commands.h"  // Import the commands
 
-// LinkedList and Node struct
+//Double linked lst
+typedef struct node {
+    struct node *prev;
+    struct node *next;
+    int data;
+    int key;
+};
+
+
+
+
 
 // Card struct - bool value for face up or down
 typedef enum {
