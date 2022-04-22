@@ -5,7 +5,7 @@
 
 // [SW] function to print/draw the terminal window / GUI/CLI
 int SWCommand() {
-    drawCards();
+    drawCards(columns, foundations);
     return 0;
 }
 

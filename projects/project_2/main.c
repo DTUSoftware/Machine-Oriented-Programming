@@ -5,13 +5,36 @@
 #include "yukon.h"  // The game
 
 int main() {
-    Card card;
-    card.number = 10;
-    card.suit = CLUBS;
 
-    Node n;
-    Node h;
-    n.next = &h;
+    for (int i = 0; i < 7; i++) {
+        Node n;
+
+        Card card;
+        card.number = 9;
+        card.suit = CLUBS;
+        card.revealed = true;
+        n.card = card;
+
+        n.next = NULL;
+
+        columns[i] = n;
+    }
+
+    for (int i = 0; i < 4; i++) {
+        Node n;
+
+        Card card;
+        card.number = 13;
+        card.suit = HEARTS;
+        card.revealed = true;
+        n.card = card;
+
+        n.next = NULL;
+
+        foundations[i] = n;
+    }
+
+    SWCommand();
 
     // the moves/executed commands can be stored in a linked list
     // in order to be able to undo commands

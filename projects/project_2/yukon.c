@@ -1,11 +1,14 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <malloc.h>
 #include "yukon.h"
+
+Node columns[7];
+Node foundations[4];
 
 //Double linked lst66
 
 // Card struct - bool value for face up or down
-
 
 
 // Game phase enum (startup, etc.)

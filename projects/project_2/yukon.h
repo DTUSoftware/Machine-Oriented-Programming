@@ -31,6 +31,9 @@ typedef struct NodeP {
     Card card;
 } Node;
 
+// Column and foundation arrays
+extern Node columns[7];
+extern Node foundations[4];
 
 // Game phase enum (startup, etc.)
 
