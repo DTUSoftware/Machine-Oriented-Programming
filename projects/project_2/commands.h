@@ -21,5 +21,12 @@ int SDCommand(char *fileName);
 // QQ command, quits the program
 int QQCommand();
 
+// P command starts the game using the current card deck
+int PCommand();
 
+// Q command quits the game and goes back to startup
+int QCommand();
+
+// game moves, where you can move the card from one pile to another
+int MCommand();
 #endif //MACHINE_ORIENTED_PROGRAMMING_PROJECT_2_COMMANDS_H
