@@ -29,4 +29,20 @@ int QCommand();
 
 // game moves, where you can move the card from one pile to another
 int MCommand();
+
+// extra stuff if time is found
+// U command, undo the last move
+int UCommand();
+
+// R command, redo the last move
+int RCommand();
+
+// S command saves the current game to a file
+int SCommand(char *fileName);
+
+// L command loads a game from a file
+int LCommand(char *fileName);
+
+
 #endif //MACHINE_ORIENTED_PROGRAMMING_PROJECT_2_COMMANDS_H
+
