@@ -106,56 +106,159 @@ int drawCards(CardNode *_columns, CardNode *_foundations) {
 };
 
 int readCommand() {
+    // TODO: mads please fix my retardedness
+    char lastCommand[] = "           ";
+    switch (commandHistory->command) {
+        case LD:
+            lastCommand[0] = 'L';
+            lastCommand[1] = 'D';
+            break;
+        case SW:
+            lastCommand[0] = 'S';
+            lastCommand[1] = 'W';
+            break;
+        case SI:
+            lastCommand[0] = 'S';
+            lastCommand[1] = 'I';
+            break;
+        case SR:
+            lastCommand[0] = 'S';
+            lastCommand[1] = 'R';
+            break;
+        case SD:
+            lastCommand[0] = 'S';
+            lastCommand[1] = 'D';
+            break;
+        case QQ:
+            lastCommand[0] = 'Q';
+            lastCommand[1] = 'Q';
+            break;
+        case P:
+            lastCommand[0] = 'P';
+            break;
+        case Q:
+            lastCommand[0] = 'Q';
+            break;
+        case MOVE:
+            // TODO: use move data instead
+            lastCommand[0] = 'M';
+            lastCommand[1] = 'O';
+            lastCommand[2] = 'V';
+            lastCommand[3] = 'E';
+            break;
+        case U:
+            lastCommand[0] = 'U';
+            break;
+        case R:
+            lastCommand[0] = 'R';
+            break;
+        case S:
+            lastCommand[0] = 'S';
+            break;
+        case L:
+            lastCommand[0] = 'L';
+            break;
+        default:
+            break;
+    }
+    printf("Last Command: %s\n", lastCommand);
+    char status[] = "          ";
+    switch (commandHistory->status) {
+        case 0:
+            status[0] = 'O';
+            status[1] = 'K';
+            break;
+        case -1:
+            status[0] = 'E';
+            status[1] = 'R';
+            status[2] = 'R';
+            status[3] = 'O';
+            status[4] = 'R';
+            break;
+        default:
+            status[0] = 'U';
+            status[1] = 'N';
+            status[2] = 'K';
+            status[3] = 'N';
+            status[4] = 'O';
+            status[5] = 'W';
+            status[6] = 'N';
+            break;
+    }
+    printf("Message: %s\n", status);
+
+    printf("INPUT >");
+    fflush(stdout);
     char command[11];
     scanf("%s", &command);
+    CommandNode commandNode;
+    int statusCode = -1;
     if (strcmp(command, "LD") == 0) {
+        commandNode.command = LD;
         char filename[20];
         scanf("%s", &filename);
-        return LDCommand(filename);
+        statusCode = LDCommand(filename);
     }
     else if (strcmp(command, "SW") == 0) {
-        return SWCommand();
+        commandNode.command = SW;
+        statusCode = SWCommand();
     }
     else if (strcmp(command, "SI") == 0) {
+        commandNode.command = SI;
         int integer;
         scanf("%d", &integer);
-        return SICommand(integer);
+        statusCode = SICommand(integer);
     }
     else if (strcmp(command, "SR") == 0) {
-        return SRCommand();
+        commandNode.command = SR;
+        statusCode = SRCommand();
     }
     else if (strcmp(command, "SD") == 0) {
+        commandNode.command = SD;
         char filename[20];
         scanf("%s", &filename);
-        return SDCommand(filename);
+        statusCode = SDCommand(filename);
     }
     else if (strcmp(command, "QQ") == 0) {
-        return QQCommand();
+        commandNode.command = QQ;
+        statusCode = QQCommand();
     }
     else if (strcmp(command, "P") == 0) {
-        return PCommand();
+        commandNode.command = P;
+        statusCode = PCommand();
     }
     else if (strcmp(command, "Q") == 0) {
-        return QCommand();
+        commandNode.command = Q;
+        statusCode = QCommand();
     }
     else if (strchr(command, ':') != NULL && strchr(command, '-') != NULL && strchr(command, '>') != NULL) {
-        return MCommand(command);
+        commandNode.command = MOVE;
+        // TODO: add data to commandNode
+        statusCode = MCommand(command);
     }
     else if (strcmp(command, "U") == 0) {
-        return UCommand();
+        commandNode.command = U;
+        statusCode = UCommand();
     }
     else if (strcmp(command, "R") == 0) {
-        return RCommand();
+        commandNode.command = R;
+        statusCode = RCommand();
     }
     else if (strcmp(command, "S") == 0) {
+        commandNode.command = S;
         char filename[20];
         scanf("%s", &filename);
-        return SCommand(filename);
+        statusCode = SCommand(filename);
     }
     else if (strcmp(command, "L") == 0) {
+        commandNode.command = L;
         char filename[20];
         scanf("%s", &filename);
-        return LCommand(filename);
+        statusCode = LCommand(filename);
     }
-    else return -1;
+    commandNode.status = statusCode;
+    commandNode.prev = commandHistory;
+    commandHistory->next = &commandNode;
+    commandHistory = &commandNode;
+    return statusCode;
 };

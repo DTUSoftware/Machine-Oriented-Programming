@@ -7,6 +7,7 @@
 int main() {
     CommandNode startCommandNode;
     startCommandNode.command = NONE;
+    startCommandNode.status = 0;
     commandHistory = &startCommandNode;
 
     for (int i = 0; i < 7; i++) {
@@ -37,7 +38,12 @@ int main() {
 //        foundations[i] = n;
 //    }
 
-    SWCommand();
+    while (true) {
+        int status = readCommand();
+        if (status != 0) {
+            // in the future, break
+        }
+    }
 
     // the moves/executed commands can be stored in a linked list
     // in order to be able to undo commands

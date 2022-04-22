@@ -1,8 +1,6 @@
 #ifndef MACHINE_ORIENTED_PROGRAMMING_PROJECT_2_COMMANDS_H
 #define MACHINE_ORIENTED_PROGRAMMING_PROJECT_2_COMMANDS_H
 
-//int commandsInit();
-
 // Command enum
 typedef enum {
     NONE,
@@ -28,6 +26,7 @@ typedef struct CommandNodeP {
     CommandNode *next;
     Command command;
     char *commandData;
+    int status;
 } CommandNode;
 
 extern CommandNode *commandHistory;

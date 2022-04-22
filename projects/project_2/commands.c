@@ -3,13 +3,6 @@
 
 CommandNode *commandHistory;
 
-//int commandsInit() {
-//    CommandNode commandNode;
-//    commandNode.command = NONE;
-//    commandHistory = &commandNode;
-//    return 0;
-//}
-
 // Command enum
 
 
