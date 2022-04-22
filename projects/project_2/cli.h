@@ -5,7 +5,11 @@
 #ifndef MACHINE_ORIENTED_PROGRAMMING_PROJECT_2_CLI_H
 #define MACHINE_ORIENTED_PROGRAMMING_PROJECT_2_CLI_H
 
-int drawCards();
+#include "yukon.h"
+
+int getCardName(Card card, char *cardName);
+
+int drawCards(Node *_columns, Node *_foundations);
 
 // read the user input
 int readCommand();
