@@ -20,19 +20,19 @@ int main() {
         columns[i] = n;
     }
 
-    for (int i = 0; i < 4; i++) {
-        Node n;
-
-        Card card;
-        card.number = 13;
-        card.suit = HEARTS;
-        card.revealed = true;
-        n.card = card;
-
-        n.next = NULL;
-
-        foundations[i] = n;
-    }
+//    for (int i = 0; i < 4; i++) {
+//        Node n;
+//
+//        Card card;
+//        card.number = 13;
+//        card.suit = HEARTS;
+//        card.revealed = true;
+//        n.card = card;
+//
+//        n.next = NULL;
+//
+//        foundations[i] = n;
+//    }
 
     SWCommand();
 

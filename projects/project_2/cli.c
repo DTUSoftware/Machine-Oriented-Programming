@@ -3,11 +3,7 @@
 #include <stdio.h>
 
 int getCardName(Card card, char *cardName) {
-    if (&card == NULL || !card.revealed) {
-        cardName[0] = '[';
-        cardName[1] = ']';
-    }
-    else {
+    if (card.revealed) {
         switch (card.number) {
             case 1:
                 cardName[0] = 'A';
@@ -65,7 +61,7 @@ int drawCards(Node *columns, Node *foundations) {
             if (activeColumns[j]) {
                 // check if the current item in the column is not null
                 if (&columnCards[j] != NULL) {
-                    char cardName[2];
+                    char cardName[] = "[]";
                     getCardName(columnCards[j].card, cardName);
                     printf("%s\t", cardName);
 
