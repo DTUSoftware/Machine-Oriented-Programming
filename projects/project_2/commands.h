@@ -9,7 +9,7 @@ int LDCommand(char *fileName);
 // [SW] function to print/draw the terminal window / GUI/CLI
 int SWCommand();
 
-// Sl, splits the card deck into to piles
+// SI, splits the card deck into to piles
 int SlCommand(int split);
 
 // SR command, shuffles the card deck
@@ -28,7 +28,7 @@ int PCommand();
 int QCommand();
 
 // game moves, where you can move the card from one pile to another
-int MCommand();
+int MCommand(char *command);
 
 // extra stuff if time is found
 // U command, undo the last move

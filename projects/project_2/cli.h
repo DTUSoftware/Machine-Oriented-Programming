@@ -7,4 +7,7 @@
 
 int drawCards();
 
+// read the user input
+int readCommand();
+
 #endif //MACHINE_ORIENTED_PROGRAMMING_PROJECT_2_CLI_H
