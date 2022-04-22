@@ -11,4 +11,7 @@ int getCardName(Card card, char *cardName);
 
 int drawCards(CardNode *_columns, CardNode *_foundations);
 
+// read the user input
+int readCommand();
+
 #endif //MACHINE_ORIENTED_PROGRAMMING_PROJECT_2_CLI_H
