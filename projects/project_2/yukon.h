@@ -15,22 +15,19 @@ typedef struct NodeP {
 } Node;
 
 // Card struct - bool value for face up or down
-typedef enum CardSuitP CardSuit;
-typedef enum CardSuitP {
+typedef enum {
     CLUBS,
     DIAMONDS,
     HEARTS,
     SPADES
 } CardSuit;
 
-typedef enum CardColorP CardColor;
-typedef enum CardColorP {
+typedef enum {
     RED,
     BLACK
 } CardColor;
 
-typedef struct CardP Card;
-typedef struct CardP {
+typedef struct {
     int number;
     CardSuit suit;
 } Card;
