@@ -1,6 +1,0 @@
-#ifndef MACHINE_ORIENTED_PROGRAMMING_PROJECT_2_funcdcl.h
-#define MACHINE_ORIENTED_PROGRAMMING_PROJECT_2_funcdcl.h
-
-
-
-#endif
