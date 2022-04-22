@@ -1,15 +1,17 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include "commands.h"  // Import the commands
+#include "funcdcl.h"   // Import the function declarations
 
-//Double linked lst
-typedef struct node {
+
+//Double linked lst66
+typedef struct card {
     struct node *prev;
     struct node *next;
-    int data;
+    char data[2];
+    bool revealed;
     int key;
 };
-
-
 
 
 
@@ -42,6 +44,7 @@ int main() {
     Card card;
     card.number = 10;
     card.suit = CLUBS;
+
 
     // the moves/executed commands can be stored in a linked list
     // in order to be able to undo commands
