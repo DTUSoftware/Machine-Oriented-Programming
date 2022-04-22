@@ -4,16 +4,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-//Double linked lst66
-typedef struct NodeP Node;
-typedef struct NodeP {
-    Node *prev;
-    Node *next;
-    char data[2];
-    bool revealed;
-    int key;
-} Node;
-
 // Card struct - bool value for face up or down
 typedef enum {
     CLUBS,
@@ -30,7 +20,16 @@ typedef enum {
 typedef struct {
     int number;
     CardSuit suit;
+    bool revealed;
 } Card;
+
+//Double linked lst66
+typedef struct NodeP Node;
+typedef struct NodeP {
+    Node *prev;
+    Node *next;
+    Card card;
+} Node;
 
 
 // Game phase enum (startup, etc.)
