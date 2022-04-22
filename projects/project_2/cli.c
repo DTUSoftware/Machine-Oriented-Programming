@@ -42,14 +42,14 @@ int getCardName(Card card, char *cardName) {
     return 0;
 };
 
-int drawCards(Node *columns, Node *foundations) {
+int drawCards(Node *_columns, Node *_foundations) {
     printf("C1\tC2\tC3\tC4\tC5\tC6\tC7\n");
     printf("\n");
     bool activeColumns[7] = {true, true, true, true, true, true, true};
 
     Node columnCards[7];
     for (int i = 0; i < 7; i++) {
-        columnCards[i] = columns[i];
+        columnCards[i] = _columns[i];
     }
 
     // keep looping until all columns are done printing
@@ -86,8 +86,8 @@ int drawCards(Node *columns, Node *foundations) {
         // print the foundations
         if (i < 4) {
             char foundationCard[] = "[]";
-            if (&foundations[i] != NULL) {
-                getCardName(foundations[i].card, foundationCard);
+            if (&_foundations[i] != NULL) {
+                getCardName(_foundations[i].card, foundationCard);
             }
             printf("\t%s\tF%d\n", foundationCard, i+1);
         }

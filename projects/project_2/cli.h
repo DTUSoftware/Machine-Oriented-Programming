@@ -9,6 +9,6 @@
 
 int getCardName(Card card, char *cardName);
 
-int drawCards(Node *columns, Node *foundations);
+int drawCards(Node *_columns, Node *_foundations);
 
 #endif //MACHINE_ORIENTED_PROGRAMMING_PROJECT_2_CLI_H
