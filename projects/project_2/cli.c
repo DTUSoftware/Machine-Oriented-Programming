@@ -42,12 +42,12 @@ int getCardName(Card card, char *cardName) {
     return 0;
 };
 
-int drawCards(Node *_columns, Node *_foundations) {
+int drawCards(CardNode *_columns, CardNode *_foundations) {
     printf("C1\tC2\tC3\tC4\tC5\tC6\tC7\n");
     printf("\n");
     bool activeColumns[7] = {true, true, true, true, true, true, true};
 
-    Node columnCards[7];
+    CardNode columnCards[7];
     for (int i = 0; i < 7; i++) {
         columnCards[i] = _columns[i];
     }

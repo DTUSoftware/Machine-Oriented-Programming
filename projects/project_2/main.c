@@ -5,9 +5,12 @@
 #include "yukon.h"  // The game
 
 int main() {
+    CommandNode startCommandNode;
+    startCommandNode.command = NONE;
+    commandHistory = &startCommandNode;
 
     for (int i = 0; i < 7; i++) {
-        Node n;
+        CardNode n;
 
         Card card;
         card.number = 9;
@@ -21,7 +24,7 @@ int main() {
     }
 
 //    for (int i = 0; i < 4; i++) {
-//        Node n;
+//        CardNode n;
 //
 //        Card card;
 //        card.number = 13;

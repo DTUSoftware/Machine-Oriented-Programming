@@ -24,16 +24,16 @@ typedef struct {
 } Card;
 
 //Double linked lst66
-typedef struct NodeP Node;
-typedef struct NodeP {
-    Node *prev;
-    Node *next;
+typedef struct CardNodeP CardNode;
+typedef struct CardNodeP {
+    CardNode *prev;
+    CardNode *next;
     Card card;
-} Node;
+} CardNode;
 
 // Column and foundation arrays
-extern Node columns[7];
-extern Node foundations[4];
+extern CardNode columns[7];
+extern CardNode foundations[4];
 
 // Game phase enum (startup, etc.)
 

@@ -1,7 +1,36 @@
 #ifndef MACHINE_ORIENTED_PROGRAMMING_PROJECT_2_COMMANDS_H
 #define MACHINE_ORIENTED_PROGRAMMING_PROJECT_2_COMMANDS_H
 
+//int commandsInit();
+
 // Command enum
+typedef enum {
+    NONE,
+    LD,
+    SW,
+    SI,
+    SR,
+    SD,
+    QQ,
+    P,
+    Q,
+    MOVE,
+    U,
+    R,
+    S,
+    L
+} Command;
+
+//Double linked for commands
+typedef struct CommandNodeP CommandNode;
+typedef struct CommandNodeP {
+    CommandNode *prev;
+    CommandNode *next;
+    Command command;
+    char *commandData;
+} CommandNode;
+
+extern CommandNode *commandHistory;
 
 // loads a deck of cards from a file, if no file is given, we load a new deck of cards
 int LDCommand(char *fileName);

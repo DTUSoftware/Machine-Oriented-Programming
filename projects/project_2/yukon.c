@@ -3,8 +3,8 @@
 #include <malloc.h>
 #include "yukon.h"
 
-Node columns[7];
-Node foundations[4];
+CardNode columns[7];
+CardNode foundations[4];
 
 //Double linked lst66
 
