@@ -39,7 +39,7 @@ int LDCommand(char *fileName);
 int SWCommand();
 
 // SI, splits the card deck into to piles
-int SlCommand(int split);
+int SICommand(int split);
 
 // SR command, shuffles the card deck
 int SRCommand();

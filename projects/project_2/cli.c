@@ -113,8 +113,13 @@ int readCommand() {
         scanf("%s", &filename);
         return LDCommand(filename);
     }
-    else if (strcmp(command, "SI") == 0) {
+    else if (strcmp(command, "SW") == 0) {
         return SWCommand();
+    }
+    else if (strcmp(command, "SI") == 0) {
+        int integer;
+        scanf("%d", &integer);
+        return SICommand(integer);
     }
     else if (strcmp(command, "SR") == 0) {
         return SRCommand();
@@ -150,7 +155,7 @@ int readCommand() {
     else if (strcmp(command, "L") == 0) {
         char filename[20];
         scanf("%s", &filename);
-        return LDCommand(filename);
+        return LCommand(filename);
     }
     else return -1;
 };
