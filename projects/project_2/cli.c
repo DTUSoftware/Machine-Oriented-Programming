@@ -24,7 +24,7 @@ int getCardName(Card card, char *cardName) {
                 cardName[0] = 'K';
                 break;
             default:
-                cardName[0] = card.number+'0';
+                cardName[0] = card.number + '0';
                 break;
         }
         switch (card.suit) {
@@ -70,19 +70,16 @@ int drawCards(CardNode *_columns, CardNode *_foundations) {
 
                     if (columnCards[j].next != NULL) {
                         columnCards[j] = *columnCards[j].next;
-                    }
-                    else {
+                    } else {
                         activeColumns[j] = false;
                         inactiveCount++;
                     }
-                }
-                else {
+                } else {
                     activeColumns[j] = false;
                     inactiveCount++;
                     printf("  \t");
                 }
-            }
-            else {
+            } else {
                 printf("  \t");
             }
         }
@@ -92,9 +89,8 @@ int drawCards(CardNode *_columns, CardNode *_foundations) {
             if (&_foundations[i] != NULL) {
                 getCardName(_foundations[i].card, foundationCard);
             }
-            printf("\t%s\tF%d\n", foundationCard, i+1);
-        }
-        else {
+            printf("\t%s\tF%d\n", foundationCard, i + 1);
+        } else {
             printf("\n");
             if (inactiveCount >= 7) {
                 break;
@@ -106,83 +102,64 @@ int drawCards(CardNode *_columns, CardNode *_foundations) {
 };
 
 int readCommand() {
-    // TODO: mads please fix my retardedness
-    char lastCommand[] = "           ";
+    // mads please fix my retardedness
+    // fixed, good old stackoverflow uWu https://stackoverflow.com/questions/32313150/array-type-char-is-not-assignable
+    char lastCommand[11];
     switch (commandHistory->command) {
         case LD:
-            lastCommand[0] = 'L';
-            lastCommand[1] = 'D';
+            strcpy(lastCommand, "LD");
             break;
         case SW:
-            lastCommand[0] = 'S';
-            lastCommand[1] = 'W';
+            strcpy(lastCommand, "SW");
             break;
         case SI:
-            lastCommand[0] = 'S';
-            lastCommand[1] = 'I';
+            strcpy(lastCommand, "SI");
             break;
         case SR:
-            lastCommand[0] = 'S';
-            lastCommand[1] = 'R';
+            strcpy(lastCommand, "SR");
             break;
         case SD:
-            lastCommand[0] = 'S';
-            lastCommand[1] = 'D';
+            strcpy(lastCommand, "SD");
             break;
         case QQ:
-            lastCommand[0] = 'Q';
-            lastCommand[1] = 'Q';
+            strcpy(lastCommand, "QQ");
             break;
         case P:
-            lastCommand[0] = 'P';
+            strcpy(lastCommand, "P");
             break;
         case Q:
-            lastCommand[0] = 'Q';
+            strcpy(lastCommand, "Q");
             break;
         case MOVE:
             // TODO: use move data instead
-            lastCommand[0] = 'M';
-            lastCommand[1] = 'O';
-            lastCommand[2] = 'V';
-            lastCommand[3] = 'E';
+            strcpy(lastCommand, "MOVE");
             break;
         case U:
-            lastCommand[0] = 'U';
+            strcpy(lastCommand, "U");
             break;
         case R:
-            lastCommand[0] = 'R';
+            strcpy(lastCommand, "R");
             break;
         case S:
-            lastCommand[0] = 'S';
+            strcpy(lastCommand, "S");
             break;
         case L:
-            lastCommand[0] = 'L';
+            strcpy(lastCommand, "L");
             break;
         default:
             break;
     }
     printf("Last Command: %s\n", lastCommand);
-    char status[] = "          ";
+    char status[10];
     switch (commandHistory->status) {
         case 0:
-            status[0] = 'O';
-            status[1] = 'K';
+            strcpy(status, "OK");
             break;
         case -1:
-            status[0] = 'E';
-            status[1] = 'R';
-            status[2] = 'R';
-            status[3] = 'O';
-            status[4] = 'R';
+            strcpy(status, "ERROR");
             break;
         default:
-            status[0] = 'U';
-            status[1] = 'N';
-            status[2] = 'K';
-            status[3] = 'N';
-            status[4] = 'O';
-            status[5] = 'W';
-            status[6] = 'N';
+            strcpy(status, "UNKNOWN");
             break;
     }
     printf("Message: %s\n", status);
@@ -198,59 +175,47 @@ int readCommand() {
         char filename[20];
         scanf("%s", &filename);
         statusCode = LDCommand(filename);
-    }
-    else if (strcmp(command, "SW") == 0) {
+    } else if (strcmp(command, "SW") == 0) {
         commandNode.command = SW;
         statusCode = SWCommand();
-    }
-    else if (strcmp(command, "SI") == 0) {
+    } else if (strcmp(command, "SI") == 0) {
         commandNode.command = SI;
         int integer;
         scanf("%d", &integer);
         statusCode = SICommand(integer);
-    }
-    else if (strcmp(command, "SR") == 0) {
+    } else if (strcmp(command, "SR") == 0) {
         commandNode.command = SR;
         statusCode = SRCommand();
-    }
-    else if (strcmp(command, "SD") == 0) {
+    } else if (strcmp(command, "SD") == 0) {
         commandNode.command = SD;
         char filename[20];
         scanf("%s", &filename);
         statusCode = SDCommand(filename);
-    }
-    else if (strcmp(command, "QQ") == 0) {
+    } else if (strcmp(command, "QQ") == 0) {
         commandNode.command = QQ;
         statusCode = QQCommand();
-    }
-    else if (strcmp(command, "P") == 0) {
+    } else if (strcmp(command, "P") == 0) {
         commandNode.command = P;
         statusCode = PCommand();
-    }
-    else if (strcmp(command, "Q") == 0) {
+    } else if (strcmp(command, "Q") == 0) {
         commandNode.command = Q;
         statusCode = QCommand();
-    }
-    else if (strchr(command, ':') != NULL && strchr(command, '-') != NULL && strchr(command, '>') != NULL) {
+    } else if (strchr(command, ':') != NULL && strchr(command, '-') != NULL && strchr(command, '>') != NULL) {
         commandNode.command = MOVE;
         // TODO: add data to commandNode
         statusCode = MCommand(command);
-    }
-    else if (strcmp(command, "U") == 0) {
+    } else if (strcmp(command, "U") == 0) {
         commandNode.command = U;
         statusCode = UCommand();
-    }
-    else if (strcmp(command, "R") == 0) {
+    } else if (strcmp(command, "R") == 0) {
         commandNode.command = R;
         statusCode = RCommand();
-    }
-    else if (strcmp(command, "S") == 0) {
+    } else if (strcmp(command, "S") == 0) {
         commandNode.command = S;
         char filename[20];
         scanf("%s", &filename);
         statusCode = SCommand(filename);
-    }
-    else if (strcmp(command, "L") == 0) {
+    } else if (strcmp(command, "L") == 0) {
         commandNode.command = L;
         char filename[20];
         scanf("%s", &filename);
