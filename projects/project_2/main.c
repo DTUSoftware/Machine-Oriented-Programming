@@ -5,6 +5,8 @@
 #include "yukon.h"  // The game
 
 int main() {
+    init();
+
     CommandNode startCommandNode;
     startCommandNode.command = NONE;
     startCommandNode.status = 0;
@@ -17,11 +19,15 @@ int main() {
         card.number = 9;
         card.suit = CLUBS;
         card.revealed = true;
-        n.card = card;
+        n.card = &card;
 
         n.next = NULL;
 
-        columns[i] = n;
+        CardColumn cardCol;
+        cardCol.head = &n;
+        cardCol.tail = &n;
+
+        columns[i] = &cardCol;
     }
 
 //    for (int i = 0; i < 4; i++) {

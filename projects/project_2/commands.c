@@ -9,12 +9,21 @@ CommandNode *commandHistory;
 
 // loads a deck of cards from a file, if no file is given, we load a new deck of cards
 int LDCommand(char *fileName) {
+    if (fileName == NULL) {
+        // load unshuffled deck of cards
+        return getUnshuffledDeck();
+    }
+    else {
+        // validate filename
+
+        // validate cards
+    }
     return 0;
 }
 
 // [SW] function to print/draw the terminal window / GUI/CLI
 int SWCommand() {
-    drawCards(columns, foundations);
+    drawCards();
     return 0;
 }
 

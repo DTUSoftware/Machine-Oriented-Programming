@@ -5,9 +5,9 @@
 #include "yukon.h"
 #include <stdio.h>
 
-int getCardName(Card card, char *cardName) {
-    if (card.revealed) {
-        switch (card.number) {
+int getCardName(Card *card, char *cardName) {
+    if (card != NULL && card->revealed) {
+        switch (card->number) {
             case 1:
                 cardName[0] = 'A';
                 break;
@@ -24,10 +24,10 @@ int getCardName(Card card, char *cardName) {
                 cardName[0] = 'K';
                 break;
             default:
-                cardName[0] = card.number + '0';
+                cardName[0] = card->number + '0';
                 break;
         }
-        switch (card.suit) {
+        switch (card->suit) {
             case CLUBS:
                 cardName[1] = 'C';
                 break;
@@ -45,14 +45,14 @@ int getCardName(Card card, char *cardName) {
     return 0;
 };
 
-int drawCards(CardNode *_columns, CardNode *_foundations) {
+int drawCards() {
     printf("C1\tC2\tC3\tC4\tC5\tC6\tC7\n");
     printf("\n");
     bool activeColumns[7] = {true, true, true, true, true, true, true};
 
-    CardNode columnCards[7];
+    CardNode *cardColumns[7];
     for (int i = 0; i < 7; i++) {
-        columnCards[i] = _columns[i];
+        cardColumns[i] = columns[i]->head;
     }
 
     // keep looping until all columns are done printing
@@ -63,13 +63,12 @@ int drawCards(CardNode *_columns, CardNode *_foundations) {
             // print the columns
             if (activeColumns[j]) {
                 // check if the current item in the column is not null
-                if (&columnCards[j] != NULL) {
+                if (cardColumns[j] != NULL) {
                     char cardName[] = "[]";
-                    getCardName(columnCards[j].card, cardName);
+                    getCardName(cardColumns[j]->card, cardName);
                     printf("%s\t", cardName);
-
-                    if (columnCards[j].next != NULL) {
-                        columnCards[j] = *columnCards[j].next;
+                    if (cardColumns[j]->next != NULL) {
+                        cardColumns[j] = cardColumns[j]->next;
                     } else {
                         activeColumns[j] = false;
                         inactiveCount++;
@@ -86,8 +85,8 @@ int drawCards(CardNode *_columns, CardNode *_foundations) {
         // print the foundations
         if (i < 4) {
             char foundationCard[] = "[]";
-            if (&_foundations[i] != NULL) {
-                getCardName(_foundations[i].card, foundationCard);
+            if (foundations[i] != NULL && foundations[i]->head != NULL) {
+                getCardName(foundations[i]->head->card, foundationCard);
             }
             printf("\t%s\tF%d\n", foundationCard, i + 1);
         } else {
@@ -102,6 +101,7 @@ int drawCards(CardNode *_columns, CardNode *_foundations) {
 };
 
 int readCommand() {
+    printf("\n");
     // mads please fix my retardedness
     // fixed, good old stackoverflow uWu https://stackoverflow.com/questions/32313150/array-type-char-is-not-assignable
     char lastCommand[11];
@@ -168,13 +168,18 @@ int readCommand() {
     fflush(stdout);
     char command[11];
     scanf("%s", &command);
+    printf("\n");
     CommandNode commandNode;
     int statusCode = -1;
     if (strcmp(command, "LD") == 0) {
         commandNode.command = LD;
-        char filename[20];
-        scanf("%s", &filename);
-        statusCode = LDCommand(filename);
+        // TODO: change this to be on the same line..?
+//        char filename[20];
+//        printf("ENTER FILENAME > ");
+//        fflush(stdout);
+//        scanf("%s", &filename);
+//        statusCode = LDCommand(filename);
+        statusCode = LDCommand(NULL);
     } else if (strcmp(command, "SW") == 0) {
         commandNode.command = SW;
         statusCode = SWCommand();

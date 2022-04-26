@@ -7,9 +7,9 @@
 
 #include "yukon.h"
 
-int getCardName(Card card, char *cardName);
+int getCardName(Card *card, char *cardName);
 
-int drawCards(CardNode *_columns, CardNode *_foundations);
+int drawCards();
 
 // read the user input
 int readCommand();
