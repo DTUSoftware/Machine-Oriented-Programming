@@ -164,7 +164,7 @@ int readCommand() {
     }
     printf("Message: %s\n", status);
 
-    printf("INPUT >");
+    printf("INPUT > ");
     fflush(stdout);
     char command[11];
     scanf("%s", &command);
