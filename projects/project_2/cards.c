@@ -1,7 +1,7 @@
 #include "cards.h"
 #include "yukon.h"
 
-Card cards[] = {
+Card allCards[] = {
         {.number = 1, .suit = CLUBS, .revealed = false},
         {.number = 2, .suit = CLUBS, .revealed = false},
         {.number = 3, .suit = CLUBS, .revealed = false},

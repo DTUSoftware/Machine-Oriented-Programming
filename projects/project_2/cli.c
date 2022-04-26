@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 int getCardName(Card *card, char *cardName) {
-    if (card != NULL && card->revealed) {
+    if (card && card->revealed) {
         switch (card->number) {
             case 1:
                 cardName[0] = 'A';
@@ -63,7 +63,7 @@ int drawCards() {
             // print the columns
             if (activeColumns[j]) {
                 // check if the current item in the column is not null
-                if (cardColumns[j] != NULL) {
+                if (cardColumns[j] && cardColumns[j]->card) {
                     char cardName[] = "[]";
                     getCardName(cardColumns[j]->card, cardName);
                     printf("%s\t", cardName);
@@ -85,8 +85,10 @@ int drawCards() {
         // print the foundations
         if (i < 4) {
             char foundationCard[] = "[]";
-            if (foundations[i] != NULL && foundations[i]->head != NULL) {
-                getCardName(foundations[i]->head->card, foundationCard);
+            CardNode *topCard;
+            topCard = foundations[i]->head;
+            if (topCard && topCard->card) {
+                getCardName(topCard->card, foundationCard);
             }
             printf("\t%s\tF%d\n", foundationCard, i + 1);
         } else {
@@ -147,6 +149,7 @@ int readCommand() {
             strcpy(lastCommand, "L");
             break;
         default:
+            strcpy(lastCommand, "");
             break;
     }
     printf("Last Command: %s\n", lastCommand);
