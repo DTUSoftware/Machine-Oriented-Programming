@@ -8,5 +8,5 @@ add_executable(Yukon
         yukon.c yukon.h
         commands.c commands.h
         cli.c cli.h
-        gui.c gui.h
+#        gui.c gui.h
         )

@@ -1,8 +1,0 @@
-//
-// The GUI (graphical user interface) for the program
-//
-
-#ifndef MACHINE_ORIENTED_PROGRAMMING_PROJECT_2_GUI_H
-#define MACHINE_ORIENTED_PROGRAMMING_PROJECT_2_GUI_H
-
-#endif //MACHINE_ORIENTED_PROGRAMMING_PROJECT_2_GUI_H
