@@ -6,8 +6,6 @@
 #include "yukon.h"  // The game
 
 int main() {
-    init();
-
     CommandNode startCommandNode;
     startCommandNode.command = NONE;
     startCommandNode.status = 0;

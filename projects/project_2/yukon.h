@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-int init();
-
 // Card struct - bool value for face up or down
 typedef enum {
     CLUBS,
@@ -41,6 +39,12 @@ extern CardNode *foundations[4];
 int clearDeck();
 
 // Game phase enum (startup, etc.)
+typedef enum {
+    STARTUP,
+    PLAY
+} Phase;
+
+extern Phase currentPhase;
 
 // function to check if card from one column can move onto other column
 // - get other column, get tail/head of linked list, check requirements in rules

@@ -173,61 +173,118 @@ int readCommand() {
     arg[0] = '0';
     scanf("%s %s", &command, &arg);
     printf("\n");
-    CommandNode commandNode;
+    CommandNode commandNode = {.command = NONE};
     int statusCode = -1;
     if (strcmp(command, "LD") == 0) {
-        commandNode.command = LD;
-        if (arg[0] == '0') { statusCode = LDCommand(NULL); }
-        else { statusCode = LDCommand(arg); }
+
+        if (currentPhase == STARTUP) {
+            commandNode.command = LD;
+            if (arg[0] == '0') { statusCode = LDCommand(NULL); }
+            else { statusCode = LDCommand(arg); }
+            statusCode = LDCommand(NULL);
+        } else {
+            printf("Command only available in the STARTUP phase!\n");
+        }
+
     } else if (strcmp(command, "SW") == 0) {
         commandNode.command = SW;
         statusCode = SWCommand();
     } else if (strcmp(command, "SI") == 0) {
-        commandNode.command = SI;
         //TODO fix this at some point idk when, but please let anyone but me fix it :)
-        int integer = (int) arg;
-        statusCode = SICommand(integer);
+
+        if (currentPhase == STARTUP) {
+            commandNode.command = SI;
+            int integer = (int) arg;
+            statusCode = SICommand(integer);
+        } else {
+            printf("Command only available in the STARTUP phase!\n");
+        }
     } else if (strcmp(command, "SR") == 0) {
-        commandNode.command = SR;
-        statusCode = SRCommand();
+        if (currentPhase == STARTUP) {
+            commandNode.command = SR;
+            statusCode = SRCommand();
+        } else {
+            printf("Command only available in the STARTUP phase!\n");
+        }
     } else if (strcmp(command, "SD") == 0) {
-        commandNode.command = SD;
-        char filename[20];
-        scanf("%s", &filename);
-        statusCode = SDCommand(filename);
+        if (currentPhase == STARTUP) {
+            commandNode.command = SD;
+            char filename[20];
+            scanf("%s", &filename);
+            statusCode = SDCommand(filename);
+        } else {
+            printf("Command only available in the STARTUP phase!\n");
+        }
     } else if (strcmp(command, "QQ") == 0) {
-        commandNode.command = QQ;
-        statusCode = QQCommand();
+        if (currentPhase == STARTUP) {
+            commandNode.command = QQ;
+            statusCode = QQCommand();
+        } else {
+            printf("Command only available in the STARTUP phase!\n");
+        }
     } else if (strcmp(command, "P") == 0) {
-        commandNode.command = P;
-        statusCode = PCommand();
+        if (currentPhase == STARTUP) {
+            commandNode.command = P;
+            statusCode = PCommand();
+        } else {
+            printf("Command only available in the STARTUP phase!\n");
+        }
     } else if (strcmp(command, "Q") == 0) {
-        commandNode.command = Q;
-        statusCode = QCommand();
+        if (currentPhase == PLAY) {
+            commandNode.command = Q;
+            statusCode = QCommand();
+        } else {
+            printf("Command only available in the PLAY phase!\n");
+        }
     } else if (strchr(command, ':') != NULL && strchr(command, '-') != NULL && strchr(command, '>') != NULL) {
-        commandNode.command = MOVE;
-        // TODO: add data to commandNode
-        statusCode = MCommand(command);
+        if (currentPhase == PLAY) {
+            commandNode.command = MOVE;
+            // TODO: add data to commandNode
+            statusCode = MCommand(command);
+        } else {
+            printf("Command only available in the PLAY phase!\n");
+        }
     } else if (strcmp(command, "U") == 0) {
-        commandNode.command = U;
-        statusCode = UCommand();
+        if (currentPhase == PLAY) {
+            commandNode.command = U;
+            statusCode = UCommand();
+        } else {
+            printf("Command only available in the PLAY phase!\n");
+        }
     } else if (strcmp(command, "R") == 0) {
-        commandNode.command = R;
-        statusCode = RCommand();
+        if (currentPhase == PLAY) {
+            commandNode.command = R;
+            statusCode = RCommand();
+        } else {
+            printf("Command only available in the PLAY phase!\n");
+        }
     } else if (strcmp(command, "S") == 0) {
-        commandNode.command = S;
-        char filename[20];
-        scanf("%s", &filename);
-        statusCode = SCommand(filename);
+        if (currentPhase == PLAY) {
+            commandNode.command = S;
+            char filename[20];
+            scanf("%s", &filename);
+            statusCode = SCommand(filename);
+        } else {
+            printf("Command only available in the PLAY phase!\n");
+        }
     } else if (strcmp(command, "L") == 0) {
-        commandNode.command = L;
-        char filename[20];
-        scanf("%s", &filename);
-        statusCode = LCommand(filename);
+        if (currentPhase == PLAY) {
+            commandNode.command = L;
+            char filename[20];
+            scanf("%s", &filename);
+            statusCode = LCommand(filename);
+        } else {
+            printf("Command only available in the PLAY phase!\n");
+        }
     }
-    commandNode.status = statusCode;
-    commandNode.prev = commandHistory;
-    commandHistory->next = &commandNode;
-    commandHistory = &commandNode;
+
+    // Add command to command history
+    if (commandNode.command != NONE) {
+        commandNode.status = statusCode;
+        commandNode.prev = commandHistory;
+        commandHistory->next = &commandNode;
+        commandHistory = &commandNode;
+    }
+
     return statusCode;
 };
