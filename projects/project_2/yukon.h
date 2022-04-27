@@ -33,19 +33,12 @@ typedef struct CardNodeP {
     Card *card;
 } CardNode;
 
-typedef struct {
-    CardNode *head;
-    CardNode *tail;
-} CardColumn;
-
-typedef struct {
-    CardNode *head;
-    CardNode *tail;
-} CardFoundation;
-
 // Column and foundation arrays
-extern CardColumn *columns[7];
-extern CardFoundation *foundations[4];
+extern CardNode *columns[7];
+extern CardNode *foundations[4];
+
+// Free the whole deck and reset it
+int clearDeck();
 
 // Game phase enum (startup, etc.)
 

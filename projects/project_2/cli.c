@@ -5,8 +5,8 @@
 #include "yukon.h"
 #include <stdio.h>
 
-int getCardName(Card *card, char *cardName) {
-    if (card && card->revealed) {
+int getCardName(Card *card, char *cardName, bool debug) {
+    if (card && (card->revealed || debug)) {
         switch (card->number) {
             case 1:
                 cardName[0] = 'A';
@@ -46,13 +46,14 @@ int getCardName(Card *card, char *cardName) {
 };
 
 int drawCards() {
+    bool debug = true;
     printf("C1\tC2\tC3\tC4\tC5\tC6\tC7\n");
     printf("\n");
     bool activeColumns[7] = {true, true, true, true, true, true, true};
 
     CardNode *cardColumns[7];
     for (int i = 0; i < 7; i++) {
-        cardColumns[i] = columns[i]->head;
+        cardColumns[i] = columns[i];
     }
 
     // keep looping until all columns are done printing
@@ -65,7 +66,7 @@ int drawCards() {
                 // check if the current item in the column is not null
                 if (cardColumns[j] && cardColumns[j]->card) {
                     char cardName[] = "[]";
-                    getCardName(cardColumns[j]->card, cardName);
+                    getCardName(cardColumns[j]->card, cardName, debug);
                     printf("%s\t", cardName);
                     if (cardColumns[j]->next != NULL) {
                         cardColumns[j] = cardColumns[j]->next;
@@ -85,10 +86,8 @@ int drawCards() {
         // print the foundations
         if (i < 4) {
             char foundationCard[] = "[]";
-            CardNode *topCard;
-            topCard = foundations[i]->head;
-            if (topCard && topCard->card) {
-                getCardName(topCard->card, foundationCard);
+            if (foundations[i] && foundations[i]->card) {
+                getCardName(foundations[i]->card, foundationCard, debug);
             }
             printf("\t%s\tF%d\n", foundationCard, i + 1);
         } else {

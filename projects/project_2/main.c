@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <malloc.h>
 #include "commands.h"  // Import the commands
 #include "cli.h"  // The command-line interface
 #include "yukon.h"  // The game
@@ -13,21 +14,17 @@ int main() {
     commandHistory = &startCommandNode;
 
     for (int i = 0; i < 7; i++) {
-        CardNode n;
+        CardNode *n = malloc(sizeof(CardNode));
 
         Card card;
         card.number = 9;
         card.suit = CLUBS;
         card.revealed = true;
-        n.card = &card;
+        n->card = &card;
 
-        n.next = NULL;
+        n->next = NULL;
 
-        CardColumn cardCol;
-        cardCol.head = &n;
-        cardCol.tail = &n;
-
-        columns[i] = &cardCol;
+        columns[i] = n;
     }
 
 //    for (int i = 0; i < 4; i++) {
