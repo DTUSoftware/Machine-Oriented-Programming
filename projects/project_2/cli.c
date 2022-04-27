@@ -169,26 +169,23 @@ int readCommand() {
     printf("INPUT > ");
     fflush(stdout);
     char command[11];
-    scanf("%s", &command);
+    char arg[20] = {};
+    arg[0] = '0';
+    scanf("%s %s", &command, &arg);
     printf("\n");
     CommandNode commandNode;
     int statusCode = -1;
     if (strcmp(command, "LD") == 0) {
         commandNode.command = LD;
-        // TODO: change this to be on the same line..?
-//        char filename[20];
-//        printf("ENTER FILENAME > ");
-//        fflush(stdout);
-//        scanf("%s", &filename);
-//        statusCode = LDCommand(filename);
-        statusCode = LDCommand(NULL);
+        if (arg[0] == '0') { statusCode = LDCommand(NULL); }
+        else { statusCode = LDCommand(arg); }
     } else if (strcmp(command, "SW") == 0) {
         commandNode.command = SW;
         statusCode = SWCommand();
     } else if (strcmp(command, "SI") == 0) {
         commandNode.command = SI;
-        int integer;
-        scanf("%d", &integer);
+        //TODO fix this at some point idk when, but please let anyone but me fix it :)
+        int integer = (int) arg;
         statusCode = SICommand(integer);
     } else if (strcmp(command, "SR") == 0) {
         commandNode.command = SR;
