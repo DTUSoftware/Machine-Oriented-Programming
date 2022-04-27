@@ -4,19 +4,10 @@
 #include "yukon.h"
 #include "cards.h"
 
-CardNode *columns[7];
-CardNode *foundations[4];
+CardNode *columns[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+CardNode *foundations[4] = { NULL, NULL, NULL, NULL };
 
-int init() {
-    for (int i = 0; i < 4; i++) {
-//        CardNode cardNode = { .card = NULL, .prev = NULL, .next = NULL };
-        foundations[i] = NULL;
-    }
-    for (int i = 0; i < 7; i++) {
-        columns[i] = NULL;
-    }
-    return 0;
-}
+Phase currentPhase = STARTUP;
 
 // clear the deck
 int clearDeck() {
@@ -76,13 +67,13 @@ int getUnshuffledDeck() {
                     prev->next = cardNode;
                     cardNode->prev = prev;
                 }
-                printf("Added card to column %d!\n"
-                       "Cardnum: %d\n"
-                       "Head = Num: %d - Suit: %d\n"
-                       "Newcard = Num: %d - Suit: %d\n\n",
-                       i+1, cardNum+1,
-                       columns[i]->card->number, columns[i]->card->suit,
-                       cardNode->card->number, cardNode->card->suit);
+//                printf("Added card to column %d!\n"
+//                       "Cardnum: %d\n"
+//                       "Head = Num: %d - Suit: %d\n"
+//                       "Newcard = Num: %d - Suit: %d\n\n",
+//                       i+1, cardNum+1,
+//                       columns[i]->card->number, columns[i]->card->suit,
+//                       cardNode->card->number, cardNode->card->suit);
                 cardNum++;
             }
             else {

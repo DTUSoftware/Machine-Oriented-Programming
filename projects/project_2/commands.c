@@ -49,11 +49,13 @@ int QQCommand() {
 
 // P command starts the game using the current card deck
 int PCommand() {
+    currentPhase = PLAY;
     return 0;
 }
 
 // Q command quits the game and goes back to startup
 int QCommand() {
+    currentPhase = STARTUP;
     return 0;
 }
 
