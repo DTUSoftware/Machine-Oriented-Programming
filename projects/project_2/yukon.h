@@ -32,7 +32,9 @@ typedef struct CardNodeP {
 } CardNode;
 
 // Column and foundation arrays
+// the 7 columns can be represented as an array of linked lists
 extern CardNode *columns[7];
+// the four foundations can be represented as an array of linked lists
 extern CardNode *foundations[4];
 
 // Free the whole deck and reset it

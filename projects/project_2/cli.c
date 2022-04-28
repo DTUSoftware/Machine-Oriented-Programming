@@ -176,12 +176,10 @@ int readCommand() {
     CommandNode commandNode = {.command = NONE};
     int statusCode = -1;
     if (strcmp(command, "LD") == 0) {
-
         if (currentPhase == STARTUP) {
             commandNode.command = LD;
             if (arg[0] == '0') { statusCode = LDCommand(NULL); }
             else { statusCode = LDCommand(arg); }
-            statusCode = LDCommand(NULL);
         } else {
             printf("Command only available in the STARTUP phase!\n");
         }

@@ -29,6 +29,10 @@ typedef struct CommandNodeP {
     int status;
 } CommandNode;
 
+// the moves/executed commands can be stored in a linked list
+// in order to be able to undo commands
+// the commands that have been undone can be stored in a linked list
+// in order to be able to redo commands
 extern CommandNode *commandHistory;
 
 // loads a deck of cards from a file, if no file is given, we load a new deck of cards
