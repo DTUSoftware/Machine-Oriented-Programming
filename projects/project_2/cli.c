@@ -3,6 +3,7 @@
 #include "cli.h"
 #include "commands.h"
 #include "yukon.h"
+#include "cards.h"
 #include <stdio.h>
 
 int getCardName(Card *card, char *cardName, bool debug) {
@@ -274,6 +275,8 @@ int readCommand() {
         } else {
             printf("Command only available in the PLAY phase!\n");
         }
+    } else if (strcmp(command, "DEBUG") == 0) {
+        switchCardStorage();
     }
 
     // Add command to command history

@@ -5,6 +5,7 @@
 #include "cards.h"
 
 CardNode *columns[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+CardNode *columnStorage[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 CardNode *foundations[4] = { NULL, NULL, NULL, NULL };
 
 Phase currentPhase = STARTUP;

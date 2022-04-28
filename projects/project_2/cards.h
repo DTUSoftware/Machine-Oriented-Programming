@@ -5,12 +5,13 @@
 
 extern Card allCards[53];
 
-int shuffleCards(CardNode *cards);
+int shuffleCards();
 
-// takes from cards to deck
-int importCards(Card *cards);
+// convert the startup deck to a playing deck
+int convertStartupToPlay();
 
-// takes from deck to cards
-int exportCards(Card *cards);
+// save cards from current game to memory
+// takes stored cards and restores them
+int switchCardStorage();
 
 #endif //MACHINE_ORIENTED_PROGRAMMING_PROJECT_2_CARDS_H

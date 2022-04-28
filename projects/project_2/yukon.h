@@ -34,6 +34,7 @@ typedef struct CardNodeP {
 // Column and foundation arrays
 // the 7 columns can be represented as an array of linked lists
 extern CardNode *columns[7];
+extern CardNode *columnStorage[7];
 // the four foundations can be represented as an array of linked lists
 extern CardNode *foundations[4];
 

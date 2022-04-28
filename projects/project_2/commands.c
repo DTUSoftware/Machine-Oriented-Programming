@@ -1,5 +1,6 @@
 #include "commands.h"
 #include "cli.h"
+#include "cards.h"
 
 CommandNode *commandHistory;
 
@@ -14,6 +15,7 @@ int LDCommand(char *fileName) {
         return getUnshuffledDeck();
     }
     else {
+        return getUnshuffledDeck();
         // validate filename
 
         // validate cards
@@ -50,6 +52,8 @@ int QQCommand() {
 // P command starts the game using the current card deck
 int PCommand() {
     currentPhase = PLAY;
+    // TODO: check if we're just continuing a game that we just paused
+    convertStartupToPlay();
     return 0;
 }
 
