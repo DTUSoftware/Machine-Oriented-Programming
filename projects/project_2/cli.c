@@ -47,7 +47,7 @@ int getCardName(Card *card, char *cardName, bool debug) {
 };
 
 int drawCards() {
-    bool debug = true;
+    bool debug = false;
     printf("C1\tC2\tC3\tC4\tC5\tC6\tC7\n");
     printf("\n");
     bool activeColumns[7] = {true, true, true, true, true, true, true};

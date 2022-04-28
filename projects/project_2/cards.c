@@ -102,12 +102,14 @@ int convertStartupToPlay() {
                                 parent = parent->next;
                             }
                             parent->next = tempColumnStorage[j];
+                            tempColumnStorage[j]->prev = parent;
                         }
                         // start a new column
                         else {
 //                            printf("add from tempcol %d to column %d [NEW]\n", j, i);
 //                            printf("card = N:%d S:%d\n", tempColumnStorage[j]->card->number, tempColumnStorage[j]->card->suit);
                             columns[i] = tempColumnStorage[j];
+                            columns[i]->prev = NULL;
                         }
                         rowCounts[i]++;
 
@@ -125,6 +127,23 @@ int convertStartupToPlay() {
             }
         }
     }
+
+    // reveal top 5 cards in each column
+    for (int i = 0; i < 7; i++) {
+        CardNode *tail = columns[i];
+        if (tail) {
+            while (tail->next) {
+                tail = tail->next;
+            }
+            for (int j = 0; j < 5; j++) {
+                tail->card->revealed = true;
+                if (tail->prev) {
+                    tail = tail->prev;
+                }
+            }
+        }
+    }
+
     return 0;
 }
 
