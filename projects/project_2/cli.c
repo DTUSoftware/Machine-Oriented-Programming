@@ -169,18 +169,24 @@ int readCommand() {
 
     printf("INPUT > ");
     fflush(stdout);
-    char command[11];
-    char arg[20] = {};
-    arg[0] = '0';
-    scanf("%s %s", &command, &arg);
+    char command[50];
+    scanf("%s", &command);
     printf("\n");
     CommandNode commandNode = {.command = NONE};
     int statusCode = -1;
     if (strcmp(command, "LD") == 0) {
         if (currentPhase == STARTUP) {
             commandNode.command = LD;
-            if (arg[0] == '0') { statusCode = LDCommand(NULL); }
-            else { statusCode = LDCommand(arg); }
+            if (strcmp(command, " ") == 0) {
+                char *arg = strtok(command, " ");
+                char path[40];
+                while (arg != NULL) {
+
+                    strcpy(path, arg);
+                    arg = strtok(NULL, " ");
+                }
+                statusCode = LDCommand(path);
+            } else { statusCode = LDCommand(NULL); }
         } else {
             printf("Command only available in the STARTUP phase!\n");
         }
@@ -193,8 +199,17 @@ int readCommand() {
 
         if (currentPhase == STARTUP) {
             commandNode.command = SI;
-            int integer = (int) arg;
-            statusCode = SICommand(integer);
+            if (strcmp(command, " ") == 0) {
+                char *arg = strtok(command, " ");
+                int integer;
+                while (arg != NULL) {
+
+                    sscanf(arg, "%d", &integer);
+                    arg = strtok(NULL, " ");
+                }
+                statusCode = SICommand(integer);
+            } else { statusCode = SICommand(NULL); }
+
         } else {
             printf("Command only available in the STARTUP phase!\n");
         }
