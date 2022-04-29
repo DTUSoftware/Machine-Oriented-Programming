@@ -120,18 +120,20 @@ int MCommand(char *command) {
                                             toCard = currentCard;
                                             currentCard->prev = NULL;
                                         } else return -1;
-                                    } else {}
-                                    while (toCard->next) {
-                                        toCard = toCard->next;
+                                    } else {
+                                        while (toCard->next) {
+                                            toCard = toCard->next;
+                                        }
+                                        if (toCard->card->suit != currentCard->card->suit &&
+                                            toCard->card->number - 1 == currentCard->card->number) {
+                                                currentCard->prev->next = NULL;
+                                                currentCard->prev = toCard;
+                                                toCard->next = currentCard;
+                                        } else return -1;
                                     }
-                                    if (toCard->card->suit != currentCard->card->suit &&
-                                        toCard->card->number - 1 == currentCard->card->number) {
-                                        currentCard->prev->next = NULL;
-                                        currentCard->prev = toCard;
-                                        toCard->next = currentCard;
-                                    } else return -1;
-                                }
+                                } else return -1;
                                 break;
+                                
                             case 'F':
                                 if (toColumn < 5 && toColumn > 0) {
                                     CardNode *toCard = foundations[toColumn - 1];
@@ -152,13 +154,13 @@ int MCommand(char *command) {
                                             currentCard->prev->next = NULL;
                                             currentCard->prev = toCard;
                                             toCard->next = currentCard;
-                                        }
+                                        } else return -1;
                                     }
 
-                                }
+                                } else return -1;
                                 break;
                             default:
-                                printf("You're not smart :)");
+                                return -1;
                         }
                     }
                     currentCard = currentCard->next;
