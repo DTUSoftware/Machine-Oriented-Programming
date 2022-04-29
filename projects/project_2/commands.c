@@ -1,8 +1,10 @@
 #include <malloc.h>
+#include <string.h>
 #include "commands.h"
 #include "cli.h"
 #include "cards.h"
 #include "yukon.h"
+#include "io.h"
 
 CommandNode *commandHistory;
 
@@ -12,11 +14,14 @@ CommandNode *commandHistory;
 
 // loads a deck of cards from a file, if no file is given, we load a new deck of cards
 int LDCommand(char *fileName) {
+    // clear card storage, in case there is something
+    clearCardStorage();
+
     if (fileName == NULL) {
         // load unshuffled deck of cards
         return getUnshuffledDeck();
-    } else {
-        return getUnshuffledDeck();
+    }
+    else {
         // validate filename
 
         // validate cards
@@ -26,22 +31,35 @@ int LDCommand(char *fileName) {
 
 // [SW] function to print/draw the terminal window / GUI/CLI
 int SWCommand() {
-    drawCards();
+    drawCards(true);
     return 0;
 }
 
 // SI, splits the card deck into to piles
 int SICommand(int split) {
+    // clear card storage, in case there is something
+    clearCardStorage();
+
     return 0;
 }
 
 // SR command, shuffles the card deck
 int SRCommand() {
+    // clear card storage, in case there is something
+    clearCardStorage();
+
     return 0;
 }
 
 // SD saves the current deck of cards to a file
 int SDCommand(char *fileName) {
+    // belive that filename is allocated by caller, but is set to null
+    if (fileName == NULL) {
+        strcpy(fileName, "cards.txt");
+    }
+
+    saveCards(fileName);
+
     return 0;
 }
 
@@ -61,6 +79,7 @@ int PCommand() {
 // Q command quits the game and goes back to startup
 int QCommand() {
     currentPhase = STARTUP;
+    switchCardStorage();
     return 0;
 }
 
@@ -166,6 +185,7 @@ int RCommand() {
 
 // S command saves the current game to a file
 int SCommand(char *fileName) {
+
     return 0;
 }
 

@@ -4,11 +4,10 @@
 #include "commands.h"
 #include "yukon.h"
 #include "cards.h"
-#include <stdio.h>
 #include <malloc.h>
 
-int getCardName(Card *card, char *cardName, bool debug) {
-    if (card && (card->revealed || debug)) {
+int getCardName(Card *card, char *cardName, bool reveal) {
+    if (card && (card->revealed || reveal)) {
         switch (card->number) {
             case 1:
                 cardName[0] = 'A';
@@ -90,8 +89,7 @@ int getCardFromName(char *cardName, Card *card) {
     return 0;
 }
 
-int drawCards() {
-    bool debug = false;
+int drawCards(bool reveal) {
     printf("C1\tC2\tC3\tC4\tC5\tC6\tC7\n");
     printf("\n");
     bool activeColumns[7] = {true, true, true, true, true, true, true};
@@ -111,7 +109,7 @@ int drawCards() {
                 // check if the current item in the column is not null
                 if (cardColumns[j] && cardColumns[j]->card) {
                     char cardName[] = "[]";
-                    getCardName(cardColumns[j]->card, cardName, debug);
+                    getCardName(cardColumns[j]->card, cardName, reveal);
                     printf("%s\t", cardName);
                     if (cardColumns[j]->next != NULL) {
                         cardColumns[j] = cardColumns[j]->next;
@@ -131,8 +129,8 @@ int drawCards() {
         // print the foundations
         if (i < 4) {
             char foundationCard[] = "[]";
-            if (foundations[i] && foundations[i]->card) {
-                getCardName(foundations[i]->card, foundationCard, debug);
+            if (currentPhase != STARTUP && foundations[i] && foundations[i]->card) {
+                getCardName(foundations[i]->card, foundationCard, reveal);
             }
             printf("\t%s\tF%d\n", foundationCard, i + 1);
         } else {
@@ -147,7 +145,6 @@ int drawCards() {
 };
 
 int readCommand() {
-    printf("\n");
     // mads please fix my retardedness
     // fixed, good old stackoverflow uWu https://stackoverflow.com/questions/32313150/array-type-char-is-not-assignable
     char lastCommand[11];
@@ -196,6 +193,12 @@ int readCommand() {
             strcpy(lastCommand, "");
             break;
     }
+
+    if (commandHistory->command != SW) {
+        drawCards(false);
+    }
+    printf("\n");
+
     printf("Last Command: %s\n", lastCommand);
     char status[10];
     switch (commandHistory->status) {

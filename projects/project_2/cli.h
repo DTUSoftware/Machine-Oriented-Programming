@@ -7,11 +7,11 @@
 
 #include "yukon.h"
 
-int getCardName(Card *card, char *cardName, bool debug);
+int getCardName(Card *card, char *cardName, bool reveal);
 
 int getCardFromName(char *cardName, Card *card);
 
-int drawCards();
+int drawCards(bool reveal);
 
 // read the user input
 int readCommand();

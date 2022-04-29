@@ -9,4 +9,4 @@ add_executable(Yukon
         commands.c commands.h
         cli.c cli.h
 #        gui.c gui.h
-        cards.c cards.h)
+        cards.c cards.h io.c io.h)
