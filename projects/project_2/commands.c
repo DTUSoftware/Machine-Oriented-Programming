@@ -222,7 +222,7 @@ int MCommand(char *command) {
                                 }
                                 break;
                             default:
-                                printf("You're not smart :)");
+                                return -1;
                         }
                     }
                     currentCard = currentCard->next;
