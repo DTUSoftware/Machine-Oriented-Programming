@@ -12,6 +12,9 @@ CommandNode *commandHistory;
 
 // loads a deck of cards from a file, if no file is given, we load a new deck of cards
 int LDCommand(char *fileName) {
+    // clear card storage, in case there is something
+    clearCardStorage();
+
     if (fileName == NULL) {
         // load unshuffled deck of cards
         return getUnshuffledDeck();
@@ -32,11 +35,17 @@ int SWCommand() {
 
 // SI, splits the card deck into to piles
 int SICommand(int split) {
+    // clear card storage, in case there is something
+    clearCardStorage();
+
     return 0;
 }
 
 // SR command, shuffles the card deck
 int SRCommand() {
+    // clear card storage, in case there is something
+    clearCardStorage();
+
     return 0;
 }
 

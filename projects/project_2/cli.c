@@ -85,7 +85,7 @@ int drawCards(bool reveal) {
         // print the foundations
         if (i < 4) {
             char foundationCard[] = "[]";
-            if (foundations[i] && foundations[i]->card) {
+            if (currentPhase != STARTUP && foundations[i] && foundations[i]->card) {
                 getCardName(foundations[i]->card, foundationCard, reveal);
             }
             printf("\t%s\tF%d\n", foundationCard, i + 1);

@@ -149,6 +149,26 @@ int convertStartupToPlay() {
     return 0;
 }
 
+// clears the card storage, if the user loads a new deck or smthn
+int clearCardStorage() {
+    for (int i = 0; i < 7; i++) {
+        // free all the memory! - ignore warning, it's harmless, I think
+        while (columnStorage[i] != NULL) {
+            if (columnStorage[i]->next) {
+                columnStorage[i] = columnStorage[i]->next;
+                free(columnStorage[i]->prev->card);
+                free(columnStorage[i]->prev);
+            }
+            else {
+                CardNode *cardNode = columnStorage[i];
+                columnStorage[i] = NULL;
+                free(cardNode);
+            }
+        }
+    }
+    return 0;
+}
+
 // save cards from current game to memory
 // takes stored cards and restores them
 // create a copy of the columns into the columnStorage

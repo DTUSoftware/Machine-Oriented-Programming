@@ -10,6 +10,8 @@ int shuffleCards();
 // convert the startup deck to a playing deck
 int convertStartupToPlay();
 
+int clearCardStorage();
+
 // save cards from current game to memory
 // takes stored cards and restores them
 int switchCardStorage();
