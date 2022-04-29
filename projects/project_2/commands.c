@@ -15,7 +15,6 @@ int LDCommand(char *fileName) {
         return getUnshuffledDeck();
     }
     else {
-        return getUnshuffledDeck();
         // validate filename
 
         // validate cards
@@ -25,7 +24,7 @@ int LDCommand(char *fileName) {
 
 // [SW] function to print/draw the terminal window / GUI/CLI
 int SWCommand() {
-    drawCards();
+    drawCards(true);
     return 0;
 }
 
