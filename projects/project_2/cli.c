@@ -47,6 +47,10 @@ int getCardName(Card *card, char *cardName, bool reveal) {
 };
 
 int getCardFromName(char *cardName, Card *card) {
+    if (cardName == NULL) {
+        return -1;
+    }
+
     switch (cardName[0]) {
         case 'A':
             card->number = 1;
@@ -64,7 +68,12 @@ int getCardFromName(char *cardName, Card *card) {
             card->number = 13;
             break;
         default:
-            card->number = cardName[0] + '0';
+            if (cardName[0] >= '0' && cardName[0] <= '9') {
+                card->number = atoi(&cardName[0]);
+            }
+            else {
+                return -2;
+            }
             break;
     }
 
@@ -82,8 +91,7 @@ int getCardFromName(char *cardName, Card *card) {
             card->suit = SPADES;
             break;
         default:
-            printf("what the fuck\n");
-            break;
+            return -3;
     }
 
     return 0;
@@ -270,9 +278,16 @@ int readCommand() {
     } else if (strcmp(command, "SD") == 0) {
         if (currentPhase == STARTUP) {
             commandNode.command = SD;
-            char filename[20];
-            scanf("%s", &filename);
-            statusCode = SDCommand(filename);
+            if (strcmp(command, " ") == 0) {
+                char *arg = strtok(command, " ");
+                char path[40];
+                while (arg != NULL) {
+
+                    strcpy(path, arg);
+                    arg = strtok(NULL, " ");
+                }
+                statusCode = SDCommand(path);
+            } else { statusCode = SDCommand(NULL); }
         } else {
             printf("Command only available in the STARTUP phase!\n");
         }
@@ -322,9 +337,15 @@ int readCommand() {
     } else if (strcmp(command, "S") == 0) {
         if (currentPhase == PLAY) {
             commandNode.command = S;
-            char filename[20];
-            scanf("%s", &filename);
-            statusCode = SCommand(filename);
+            if (strcmp(command, " ") == 0) {
+                char *arg = strtok(command, " ");
+                char path[40];
+                while (arg != NULL) {
+                    strcpy(path, arg);
+                    arg = strtok(NULL, " ");
+                }
+                statusCode = SCommand(path);
+            } else { statusCode = SCommand(NULL); }
         } else {
             printf("Command only available in the PLAY phase!\n");
         }

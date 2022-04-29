@@ -60,9 +60,11 @@ int SRCommand() {
 int SDCommand(char *fileName) {
     // belive that filename is allocated by caller, but is set to null
     if (fileName == NULL) {
+        fileName = malloc(sizeof(char)*10);
         strcpy(fileName, "cards.txt");
     }
 
+    printf("saving to %s", fileName);
     saveCards(fileName);
 
     return 0;
@@ -192,6 +194,7 @@ int RCommand() {
 int SCommand(char *fileName) {
     // belive that filename is allocated by caller, but is set to null
     if (fileName == NULL) {
+        fileName = malloc(sizeof(char)*14);
         strcpy(fileName, "gamestate.txt");
     }
 

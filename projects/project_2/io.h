@@ -14,9 +14,9 @@ typedef enum {
 
 int validateFile(char *fileName, char *fileMode, FileType fileType, FILE *file);
 
-int saveCards(char *filename);
-int loadCards(char *filename, Card *cards);
-int saveState(char *filename);
-int loadState(char *filename);
+int saveCards(char *fileName);
+int loadCards(char *fileName, Card *cards);
+int saveState(char *fileName);
+int loadState(char *fileName);
 
 #endif //MACHINE_ORIENTED_PROGRAMMING_PROJECT_2_IO_H
