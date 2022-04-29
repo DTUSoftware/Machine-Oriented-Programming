@@ -1,6 +1,8 @@
+#include <malloc.h>
 #include "commands.h"
 #include "cli.h"
 #include "cards.h"
+#include "yukon.h"
 
 CommandNode *commandHistory;
 
@@ -13,8 +15,7 @@ int LDCommand(char *fileName) {
     if (fileName == NULL) {
         // load unshuffled deck of cards
         return getUnshuffledDeck();
-    }
-    else {
+    } else {
         return getUnshuffledDeck();
         // validate filename
 
@@ -65,6 +66,90 @@ int QCommand() {
 
 // game moves, where you can move the card from one pile to another
 int MCommand(char *command) {
+    char pile = command[0];
+    char toPile = command[7];
+    int column = (int) command[1];
+    int toColumn = (int) command[8];
+    char cardName[2];
+    cardName[0] = command[3];
+    cardName[1] = command[4];
+    // husk at free din bisse
+    Card *card = malloc(sizeof(Card));
+    getCardFromName(cardName, card);
+    switch (pile) {
+        case 'C':
+            if (column < 8 && column > 0) {
+                CardNode *currentCard = columns[column - 1];
+                while (currentCard) {
+                    if (currentCard->card->number == card->number && currentCard->card->suit == card->suit &&
+                        card->revealed) {
+                        switch (toPile) {
+                            case 'C':
+                                if (toColumn < 8 && toColumn > 0) {
+                                    CardNode *toCard = columns[toColumn - 1];
+                                    if (toCard == NULL) {
+                                        if (currentCard->card->number == 13) {
+                                            // TODO might not work :) someone can maybe fix if they are giga chad aka Marcus
+                                            currentCard->prev->next = NULL;
+                                            toCard = currentCard;
+                                            currentCard->prev = NULL;
+                                        } else return -1;
+                                    } else {}
+                                    while (toCard->next) {
+                                        toCard = toCard->next;
+                                    }
+                                    if (toCard->card->suit != currentCard->card->suit &&
+                                        toCard->card->number - 1 == currentCard->card->number) {
+                                        currentCard->prev->next = NULL;
+                                        currentCard->prev = toCard;
+                                        toCard->next = currentCard;
+                                    } else return -1;
+                                }
+                                break;
+                            case 'F':
+                                if (toColumn < 5 && toColumn > 0) {
+                                    CardNode *toCard = foundations[toColumn - 1];
+                                    if (toCard == NULL) {
+                                        if (currentCard->card->number == 1 && currentCard->next == NULL) {
+                                            // TODO might not work :) someone can maybe fix if they are giga chad aka Marcus
+                                            currentCard->prev->next = NULL;
+                                            toCard = currentCard;
+                                            currentCard->prev = NULL;
+                                        } else return -1;
+                                    } else {
+                                        while (toCard->next) {
+                                            toCard = toCard->next;
+                                        }
+                                        if (currentCard->card->suit == toCard->card->suit &&
+                                            currentCard->card->number - 1 == toCard->card->number &&
+                                            currentCard->next == NULL) {
+                                            currentCard->prev->next = NULL;
+                                            currentCard->prev = toCard;
+                                            toCard->next = currentCard;
+                                        }
+                                    }
+
+                                }
+                                break;
+                            default:
+                                printf("You're not smart :)");
+                        }
+                    }
+                    currentCard = currentCard->next;
+                }
+            }
+            break;
+        case 'F':
+            if (column < 5 && column > 0) {
+
+            }
+            break;
+        default:
+            return -1;
+    }
+    // gør læreren glad :)
+    free(card);
+
     return 0;
 }
 

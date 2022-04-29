@@ -5,6 +5,7 @@
 #include "yukon.h"
 #include "cards.h"
 #include <stdio.h>
+#include <malloc.h>
 
 int getCardName(Card *card, char *cardName, bool debug) {
     if (card && (card->revealed || debug)) {
@@ -45,6 +46,49 @@ int getCardName(Card *card, char *cardName, bool debug) {
     }
     return 0;
 };
+
+int getCardFromName(char *cardName, Card *card) {
+    switch (cardName[0]) {
+        case 'A':
+            card->number = 1;
+            break;
+        case 'T':
+            card->number = 10;
+            break;
+        case 'J':
+            card->number = 11;
+            break;
+        case 'Q':
+            card->number = 12;
+            break;
+        case 'K':
+            card->number = 13;
+            break;
+        default:
+            card->number = cardName[0] + '0';
+            break;
+    }
+
+    switch (cardName[1]) {
+        case 'C':
+            card->suit = CLUBS;
+            break;
+        case 'D':
+            card->suit = DIAMONDS;
+            break;
+        case 'H':
+            card->suit = HEARTS;
+            break;
+        case 'S':
+            card->suit = SPADES;
+            break;
+        default:
+            printf("what the fuck\n");
+            break;
+    }
+
+    return 0;
+}
 
 int drawCards() {
     bool debug = false;

@@ -9,6 +9,8 @@
 
 int getCardName(Card *card, char *cardName, bool debug);
 
+int getCardFromName(char *cardName, Card *card);
+
 int drawCards();
 
 // read the user input
