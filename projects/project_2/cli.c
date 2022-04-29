@@ -101,7 +101,6 @@ int drawCards(bool reveal) {
 };
 
 int readCommand() {
-    printf("\n");
     // mads please fix my retardedness
     // fixed, good old stackoverflow uWu https://stackoverflow.com/questions/32313150/array-type-char-is-not-assignable
     char lastCommand[11];
@@ -154,6 +153,7 @@ int readCommand() {
     if (commandHistory->command != SW) {
         drawCards(false);
     }
+    printf("\n");
 
     printf("Last Command: %s\n", lastCommand);
     char status[10];

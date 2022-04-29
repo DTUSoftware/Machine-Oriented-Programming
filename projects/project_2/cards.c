@@ -58,7 +58,9 @@ Card allCards[] = {
 };
 
 // convert the startup deck to a playing deck
+// this puts the current deck into the deck storage!
 int convertStartupToPlay() {
+    switchCardStorage();
     CardNode *tempColumnStorage[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
     for (int i = 0; i < 7; i++) {
         tempColumnStorage[i] = columns[i];
@@ -149,11 +151,43 @@ int convertStartupToPlay() {
 
 // save cards from current game to memory
 // takes stored cards and restores them
+// create a copy of the columns into the columnStorage
 int switchCardStorage() {
     for (int i = 0; i < 7; i++) {
-        CardNode *tempColumnPointer = columns[i];
-        columns[i] = columnStorage[i];
-        columnStorage[i] = tempColumnPointer;
+        CardNode *tempColumnPointer = columnStorage[i];
+        columnStorage[i] = columns[i];
+        columns[i] = NULL;
+        if (tempColumnPointer == NULL) {
+            CardNode *currentCard = columnStorage[i];
+            while (currentCard != NULL) {
+                CardNode *newCardNode = malloc(sizeof(CardNode));
+                newCardNode->next = NULL;
+                newCardNode->prev = NULL;
+
+                Card *newCard = malloc(sizeof(Card));
+                newCard->number = currentCard->card->number;
+                newCard->suit = currentCard->card->suit;
+                newCard->revealed = currentCard->card->revealed;
+                newCardNode->card = newCard;
+
+                if (columns[i] == NULL) {
+                    columns[i] = newCardNode;
+                }
+                else {
+                    CardNode *parentCard = columns[i];
+                    while (parentCard->next) {
+                        parentCard = parentCard->next;
+                    }
+                    parentCard->next = newCardNode;
+                    newCardNode->prev = parentCard;
+                }
+
+                currentCard = currentCard->next;
+            }
+        }
+        else {
+            columns[i] = tempColumnPointer;
+        }
     }
     return 0;
 }

@@ -59,6 +59,7 @@ int PCommand() {
 // Q command quits the game and goes back to startup
 int QCommand() {
     currentPhase = STARTUP;
+    switchCardStorage();
     return 0;
 }
 
