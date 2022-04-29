@@ -7,7 +7,12 @@
 
 #include "yukon.h"
 
-int validateFilename(char *filename);
+typedef enum {
+    CARDS,
+    STATE
+} FileType;
+
+int validateFile(char *fileName, char *fileMode, FileType fileType, FILE *file);
 
 int saveCards(char *filename);
 int loadCards(char *filename, Card *cards);

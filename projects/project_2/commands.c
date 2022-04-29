@@ -20,9 +20,14 @@ int LDCommand(char *fileName) {
         return getUnshuffledDeck();
     }
     else {
-        // validate filename
+        // load cards from file
+        Card cards[52];
+        int loadStatus = loadCards(fileName, cards);
+        if (loadStatus != 0) {
+            return loadStatus;
+        }
 
-        // validate cards
+        // add cards to deck
     }
     return 0;
 }
@@ -99,11 +104,15 @@ int RCommand() {
 
 // S command saves the current game to a file
 int SCommand(char *fileName) {
+    // belive that filename is allocated by caller, but is set to null
+    if (fileName == NULL) {
+        strcpy(fileName, "gamestate.txt");
+    }
 
-    return 0;
+    return saveState(fileName);
 }
 
 // L command loads a game from a file
 int LCommand(char *fileName) {
-    return 0;
+    return loadState(fileName);
 }
