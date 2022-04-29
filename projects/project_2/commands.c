@@ -1,6 +1,8 @@
+#include <string.h>
 #include "commands.h"
 #include "cli.h"
 #include "cards.h"
+#include "io.h"
 
 CommandNode *commandHistory;
 
@@ -40,6 +42,13 @@ int SRCommand() {
 
 // SD saves the current deck of cards to a file
 int SDCommand(char *fileName) {
+    // belive that filename is allocated by caller, but is set to null
+    if (fileName == NULL) {
+        strcpy(fileName, "cards.txt");
+    }
+
+    saveCards(fileName);
+
     return 0;
 }
 
@@ -81,6 +90,7 @@ int RCommand() {
 
 // S command saves the current game to a file
 int SCommand(char *fileName) {
+
     return 0;
 }
 
