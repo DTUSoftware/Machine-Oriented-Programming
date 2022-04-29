@@ -163,12 +163,69 @@ int MCommand(char *command) {
                     }
                     currentCard = currentCard->next;
                 }
-            }
+            } else return -1;
             break;
         case 'F':
             if (column < 5 && column > 0) {
+                CardNode *currentCard = columns[column - 1];
+                while (currentCard->next == NULL) {
+                    if (currentCard->card->number == card->number && currentCard->card->suit == card->suit &&
+                        card->revealed) {
+                        switch (toPile) {
+                            case 'C':
+                                if (toColumn < 8 && toColumn > 0) {
+                                    CardNode *toCard = columns[toColumn - 1];
+                                    if (toCard == NULL) {
+                                        if (currentCard->card->number == 13) {
+                                            // TODO might not work :) someone can maybe fix if they are giga chad aka Marcus
+                                            currentCard->prev->next = NULL;
+                                            toCard = currentCard;
+                                            currentCard->prev = NULL;
+                                        } else return -1;
+                                    } else {}
+                                    while (toCard->next) {
+                                        toCard = toCard->next;
+                                    }
+                                    if (toCard->card->suit != currentCard->card->suit &&
+                                        toCard->card->number - 1 == currentCard->card->number) {
+                                        currentCard->prev->next = NULL;
+                                        currentCard->prev = toCard;
+                                        toCard->next = currentCard;
+                                    } else return -1;
+                                }
+                                break;
+                            case 'F':
+                                if (toColumn < 5 && toColumn > 0) {
+                                    CardNode *toCard = foundations[toColumn - 1];
+                                    if (toCard == NULL) {
+                                        if (currentCard->card->number == 1 && currentCard->next == NULL) {
+                                            // TODO might not work :) someone can maybe fix if they are giga chad aka Marcus
+                                            currentCard->prev->next = NULL;
+                                            toCard = currentCard;
+                                            currentCard->prev = NULL;
+                                        } else return -1;
+                                    } else {
+                                        while (toCard->next) {
+                                            toCard = toCard->next;
+                                        }
+                                        if (currentCard->card->suit == toCard->card->suit &&
+                                            currentCard->card->number - 1 == toCard->card->number &&
+                                            currentCard->next == NULL) {
+                                            currentCard->prev->next = NULL;
+                                            currentCard->prev = toCard;
+                                            toCard->next = currentCard;
+                                        }
+                                    }
 
-            }
+                                }
+                                break;
+                            default:
+                                printf("You're not smart :)");
+                        }
+                    }
+                    currentCard = currentCard->next;
+                }
+            } else return -1;
             break;
         default:
             return -1;
