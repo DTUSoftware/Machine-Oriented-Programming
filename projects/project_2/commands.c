@@ -94,6 +94,9 @@ int QCommand() {
 int MCommand(char *command, bool fromBottom) {
     char pile = command[0];
     int column = atol(&command[1]);
+    if (((column > 7 && pile == 'C') || (column > 4 && pile == 'F')) || column < 1) {
+        return -1;
+    }
     char toPile;
     int toColumn;
     char cardName[2];
@@ -104,7 +107,7 @@ int MCommand(char *command, bool fromBottom) {
         toPile = command[4];
         toColumn = atol(&command[5]);
 
-        CardNode *bottomNode = columns[column];
+        CardNode *bottomNode = columns[column - 1];
         while (bottomNode->next) {
             bottomNode = bottomNode->next;
         }
@@ -121,135 +124,98 @@ int MCommand(char *command, bool fromBottom) {
         getCardFromName(cardName, card);
     }
 
+    if (((toColumn > 7 && toPile == 'C') || (toColumn > 4 && toPile == 'F')) || toColumn < 1) {
+        if (!fromBottom) free(card);
+        return -1;
+    }
+
+    CardNode *currentCard;
     switch (pile) {
         case 'C':
-            if (column < 8 && column > 0) {
-                CardNode *currentCard = columns[column - 1];
-                while (currentCard) {
-                    if (currentCard->card->number == card->number && currentCard->card->suit == card->suit &&
-                        card->revealed) {
-                        switch (toPile) {
-                            case 'C':
-                                if (toColumn < 8 && toColumn > 0) {
-                                    CardNode *toCard = columns[toColumn - 1];
-                                    if (toCard == NULL) {
-                                        if (currentCard->card->number == 13) {
-                                            // TODO might not work :) someone can maybe fix if they are giga chad aka Marcus
-                                            currentCard->prev->next = NULL;
-                                            toCard = currentCard;
-                                            currentCard->prev = NULL;
-                                        } else return -1;
-                                    } else {
-                                        while (toCard->next) {
-                                            toCard = toCard->next;
-                                        }
-                                        if (toCard->card->suit != currentCard->card->suit &&
-                                            toCard->card->number - 1 == currentCard->card->number) {
-                                                currentCard->prev->next = NULL;
-                                                currentCard->prev = toCard;
-                                                toCard->next = currentCard;
-                                        } else return -1;
-                                    }
-                                } else return -1;
-                                break;
-                                
-                            case 'F':
-                                if (toColumn < 5 && toColumn > 0) {
-                                    CardNode *toCard = foundations[toColumn - 1];
-                                    if (toCard == NULL) {
-                                        if (currentCard->card->number == 1 && currentCard->next == NULL) {
-                                            // TODO might not work :) someone can maybe fix if they are giga chad aka Marcus
-                                            currentCard->prev->next = NULL;
-                                            toCard = currentCard;
-                                            currentCard->prev = NULL;
-                                        } else return -1;
-                                    } else {
-                                        while (toCard->next) {
-                                            toCard = toCard->next;
-                                        }
-                                        if (currentCard->card->suit == toCard->card->suit &&
-                                            currentCard->card->number - 1 == toCard->card->number &&
-                                            currentCard->next == NULL) {
-                                            currentCard->prev->next = NULL;
-                                            currentCard->prev = toCard;
-                                            toCard->next = currentCard;
-                                        } else return -1;
-                                    }
-
-                                } else return -1;
-                                break;
-                            default:
-                                return -1;
-                        }
-                    }
-                    currentCard = currentCard->next;
-                }
-            } else return -1;
+            currentCard = columns[column - 1];
             break;
         case 'F':
-            if (column < 5 && column > 0) {
-                CardNode *currentCard = columns[column - 1];
-                while (currentCard->next == NULL) {
-                    if (currentCard->card->number == card->number && currentCard->card->suit == card->suit &&
-                        card->revealed) {
-                        switch (toPile) {
-                            case 'C':
-                                if (toColumn < 8 && toColumn > 0) {
-                                    CardNode *toCard = columns[toColumn - 1];
-                                    if (toCard == NULL) {
-                                        if (currentCard->card->number == 13) {
-                                            // TODO might not work :) someone can maybe fix if they are giga chad aka Marcus
-                                            currentCard->prev->next = NULL;
-                                            toCard = currentCard;
-                                            currentCard->prev = NULL;
-                                        } else return -1;
-                                    } else {}
-                                    while (toCard->next) {
-                                        toCard = toCard->next;
-                                    }
-                                    if (toCard->card->suit != currentCard->card->suit &&
-                                        toCard->card->number - 1 == currentCard->card->number) {
-                                        currentCard->prev->next = NULL;
-                                        currentCard->prev = toCard;
-                                        toCard->next = currentCard;
-                                    } else return -1;
-                                }
-                                break;
-                            case 'F':
-                                if (toColumn < 5 && toColumn > 0) {
-                                    CardNode *toCard = foundations[toColumn - 1];
-                                    if (toCard == NULL) {
-                                        if (currentCard->card->number == 1 && currentCard->next == NULL) {
-                                            // TODO might not work :) someone can maybe fix if they are giga chad aka Marcus
-                                            currentCard->prev->next = NULL;
-                                            toCard = currentCard;
-                                            currentCard->prev = NULL;
-                                        } else return -1;
-                                    } else {
-                                        while (toCard->next) {
-                                            toCard = toCard->next;
-                                        }
-                                        if (currentCard->card->suit == toCard->card->suit &&
-                                            currentCard->card->number - 1 == toCard->card->number &&
-                                            currentCard->next == NULL) {
-                                            currentCard->prev->next = NULL;
-                                            currentCard->prev = toCard;
-                                            toCard->next = currentCard;
-                                        }
-                                    }
-
-                                }
-                                break;
-                            default:
-                                return -1;
-                        }
-                    }
-                    currentCard = currentCard->next;
-                }
-            } else return -1;
+            currentCard = foundations[column - 1];
             break;
         default:
-            return -1;
+            if (!fromBottom) free(card);
+            return -2;
+    }
+    while (currentCard->card->number != card->number || currentCard->card->suit != card->suit) {
+        if (!currentCard->next) {
+            if (!fromBottom) free(card);
+            return -3;
+        }
+        currentCard = currentCard->next;
+    }
+    if (!currentCard->card->revealed) {
+        if (!fromBottom) free(card);
+        return -4;
+    }
+
+    CardNode *toCard;
+    switch (toPile) {
+        case 'C':
+            toCard = columns[toColumn - 1];
+
+            if (toCard == NULL) {
+                if (currentCard->card->number == 13) {
+                    currentCard->prev->next = NULL;
+                    columns[toColumn - 1] = currentCard;
+                    currentCard->prev = NULL;
+                } else {
+                    if (!fromBottom) free(card);
+                    return -5;
+                }
+            } else {
+                while (toCard->next) {
+                    toCard = toCard->next;
+                }
+                if (toCard->card->suit != currentCard->card->suit &&
+                    toCard->card->number - 1 == currentCard->card->number) {
+                    currentCard->prev->next = NULL;
+                    currentCard->prev = toCard;
+                    toCard->next = currentCard;
+                } else {
+                    if (!fromBottom) free(card);
+                    return -6;
+                }
+            }
+
+            break;
+        case 'F':
+            toCard = foundations[toColumn - 1];
+
+            if (toCard == NULL) {
+                if (currentCard->card->number == 1 && currentCard->next == NULL) {
+                    // TODO might not work :) someone can maybe fix if they are giga chad aka Marcus
+                    currentCard->prev->next = NULL;
+                    foundations[toColumn - 1] = currentCard;
+                    currentCard->prev = NULL;
+                } else {
+                    if (!fromBottom) free(card);
+                    return -5;
+                }
+            } else {
+                while (toCard->next) {
+                    toCard = toCard->next;
+                }
+                if (currentCard->card->suit == toCard->card->suit &&
+                    currentCard->card->number - 1 == toCard->card->number &&
+                    currentCard->next == NULL) {
+                    currentCard->prev->next = NULL;
+                    currentCard->prev = toCard;
+                    toCard->next = currentCard;
+                } else {
+                    if (!fromBottom) free(card);
+                    return -6;
+                }
+            }
+
+            break;
+        default:
+            if (!fromBottom) free(card);
+            return -2;
     }
 
     if (!fromBottom) {

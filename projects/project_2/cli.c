@@ -208,7 +208,8 @@ int readCommand() {
     printf("\n");
 
     printf("Last Command: %s\n", lastCommand);
-    char status[10];
+    char status[30];
+    char unknownStatusFormat[] = "UNKNOWN ERROR (Code: %d)";
     switch (commandHistory->status) {
         case 0:
             strcpy(status, "OK");
@@ -217,7 +218,7 @@ int readCommand() {
             strcpy(status, "ERROR");
             break;
         default:
-            strcpy(status, "UNKNOWN");
+            sprintf(status, unknownStatusFormat, commandHistory->status);
             break;
     }
     printf("Message: %s\n", status);
