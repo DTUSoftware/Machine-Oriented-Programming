@@ -12,7 +12,7 @@ typedef enum {
     STATE
 } FileType;
 
-int validateFile(char *fileName, char *fileMode, FileType fileType, FILE *file);
+int validateFile(char *fileName, char *fileMode, FileType fileType, FILE **file);
 
 int saveCards(char *fileName);
 int loadCards(char *fileName, Card *cards);

@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include <stdbool.h>
 #include <malloc.h>
 #include "yukon.h"
 #include "cards.h"
+#include "io.h"
 
 CardNode *columns[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 CardNode *columnStorage[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
@@ -16,6 +16,7 @@ int clearDeck() {
         CardNode *cardNode = foundations[i];
         while (cardNode) {
             CardNode *next = cardNode->next;
+            free(cardNode->card);
             free(cardNode);
             cardNode = next;
         }
@@ -25,6 +26,8 @@ int clearDeck() {
         CardNode *cardNode = columns[i];
         while (cardNode) {
             CardNode *next = cardNode->next;
+            // TODO: fix so this free of card doesn't break the code
+//            free(cardNode->card);
             free(cardNode);
             cardNode = next;
         }
@@ -38,12 +41,8 @@ int clearDeck() {
 
 // Game phase enum (startup, etc.)
 
-// function to check if card from one column can move onto other column
-// - get other column, get tail/head of linked list, check requirements in rules
 
-int getUnshuffledDeck() {
-    clearDeck();
-
+int addCardsToDeck(Card *cards) {
     int cardNum = 0;
     while (cardNum < 52) {
         for (int i = 0; i < 7; i++) {
@@ -54,7 +53,7 @@ int getUnshuffledDeck() {
                 }
                 cardNode->next = NULL;
                 cardNode->prev = NULL;
-                cardNode->card = &allCards[cardNum];
+                cardNode->card = &cards[cardNum];
                 if (!columns[i]) {
                     columns[i] = cardNode;
                 }
@@ -84,4 +83,30 @@ int getUnshuffledDeck() {
     }
 
     return 0;
+}
+
+
+// function to check if card from one column can move onto other column
+// - get other column, get tail/head of linked list, check requirements in rules
+
+int getUnshuffledDeck() {
+    Card *cards = malloc(sizeof(Card)*52);
+    int loadStatus = loadCards("../examples/decks/unshuffled.txt", cards);
+    if (loadStatus != 0) {
+        return loadStatus;
+    }
+    // add cards to deck
+    int addStatus = addCardsToDeck(cards);
+    if (addStatus != 0) {
+        loadStatus = loadCards("examples/decks/unshuffled.txt", cards);
+        if (loadStatus != 0) {
+            return loadStatus;
+        }
+        // add cards to deck
+        addStatus = addCardsToDeck(cards);
+        if (addStatus != 0) {
+            addStatus = addCardsToDeck(allCards);
+        }
+    }
+    return addStatus;
 }

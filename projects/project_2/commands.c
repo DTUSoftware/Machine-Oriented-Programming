@@ -16,6 +16,8 @@ CommandNode *commandHistory;
 int LDCommand(char *fileName) {
     // clear card storage, in case there is something
     clearCardStorage();
+    // clear the deck as well
+    clearDeck();
 
     if (fileName == NULL) {
         // load unshuffled deck of cards
@@ -23,15 +25,15 @@ int LDCommand(char *fileName) {
     }
     else {
         // load cards from file
-        Card cards[52];
+        Card *cards = malloc(sizeof(Card)*52);
         int loadStatus = loadCards(fileName, cards);
         if (loadStatus != 0) {
             return loadStatus;
         }
 
         // add cards to deck
+        return addCardsToDeck(cards);
     }
-    return 0;
 }
 
 // [SW] function to print/draw the terminal window / GUI/CLI

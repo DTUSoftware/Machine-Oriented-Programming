@@ -51,6 +51,9 @@ int getCardFromName(char *cardName, Card *card) {
         return -1;
     }
 
+//    printf("%s\n", cardName);
+//    printf("cardName[0]: %c\n", cardName[0]);
+
     switch (cardName[0]) {
         case 'A':
             card->number = 1;
@@ -76,6 +79,7 @@ int getCardFromName(char *cardName, Card *card) {
             }
             break;
     }
+//    printf("cardName[1]: %c\n", cardName[1]);
 
     switch (cardName[1]) {
         case 'C':
@@ -217,6 +221,10 @@ int readCommand() {
         case -1:
             strcpy(status, "ERROR");
             break;
+        case 400:
+            // bad request
+            strcpy(status, "Unknown Command");
+            break;
         default:
             sprintf(status, unknownStatusFormat, commandHistory->status);
             break;
@@ -225,19 +233,24 @@ int readCommand() {
 
     printf("INPUT > ");
     fflush(stdout);
-    char command[50];
-    scanf("%s", &command);
+    char command[110];
+    fgets(command, 110, stdin);
     printf("\n");
+
+    // remove trailing newline, if existing
+    if ((strlen(command) > 0) && (command[strlen(command) - 1] == '\n')) {
+        command[strlen(command) - 1] = '\0';
+    }
+
     CommandNode commandNode = {.command = NONE};
     int statusCode = -1;
-    if (strcmp(command, "LD") == 0) {
+    if (strstr(command, "LD") != NULL) {
         if (currentPhase == STARTUP) {
             commandNode.command = LD;
-            if (strcmp(command, " ") == 0) {
+            if (strstr(command, " ") != NULL) {
                 char *arg = strtok(command, " ");
-                char path[40];
+                char path[100];
                 while (arg != NULL) {
-
                     strcpy(path, arg);
                     arg = strtok(NULL, " ");
                 }
@@ -247,19 +260,18 @@ int readCommand() {
             printf("Command only available in the STARTUP phase!\n");
         }
 
-    } else if (strcmp(command, "SW") == 0) {
+    } else if (strstr(command, "SW") != NULL) {
         commandNode.command = SW;
         statusCode = SWCommand();
-    } else if (strcmp(command, "SI") == 0) {
+    } else if (strstr(command, "SI") != NULL) {
         //TODO fix this at some point idk when, but please let anyone but me fix it :)
 
         if (currentPhase == STARTUP) {
             commandNode.command = SI;
-            if (strcmp(command, " ") == 0) {
+            if (strstr(command, " ") != NULL) {
                 char *arg = strtok(command, " ");
                 int integer;
                 while (arg != NULL) {
-
                     sscanf(arg, "%d", &integer);
                     arg = strtok(NULL, " ");
                 }
@@ -269,19 +281,19 @@ int readCommand() {
         } else {
             printf("Command only available in the STARTUP phase!\n");
         }
-    } else if (strcmp(command, "SR") == 0) {
+    } else if (strstr(command, "SR") != NULL) {
         if (currentPhase == STARTUP) {
             commandNode.command = SR;
             statusCode = SRCommand();
         } else {
             printf("Command only available in the STARTUP phase!\n");
         }
-    } else if (strcmp(command, "SD") == 0) {
+    } else if (strstr(command, "SD") != NULL) {
         if (currentPhase == STARTUP) {
             commandNode.command = SD;
-            if (strcmp(command, " ") == 0) {
+            if (strstr(command, " ") != NULL) {
                 char *arg = strtok(command, " ");
-                char path[40];
+                char path[100];
                 while (arg != NULL) {
 
                     strcpy(path, arg);
@@ -292,21 +304,21 @@ int readCommand() {
         } else {
             printf("Command only available in the STARTUP phase!\n");
         }
-    } else if (strcmp(command, "QQ") == 0) {
+    } else if (strstr(command, "QQ") != NULL) {
         if (currentPhase == STARTUP) {
             commandNode.command = QQ;
             statusCode = QQCommand();
         } else {
             printf("Command only available in the STARTUP phase!\n");
         }
-    } else if (strcmp(command, "P") == 0) {
+    } else if (strstr(command, "P") != NULL) {
         if (currentPhase == STARTUP) {
             commandNode.command = P;
             statusCode = PCommand();
         } else {
             printf("Command only available in the STARTUP phase!\n");
         }
-    } else if (strcmp(command, "Q") == 0) {
+    } else if (strstr(command, "Q") != NULL) {
         if (currentPhase == PLAY) {
             commandNode.command = Q;
             statusCode = QCommand();
@@ -327,26 +339,26 @@ int readCommand() {
         } else {
             printf("Command only available in the PLAY phase!\n");
         }
-    } else if (strcmp(command, "U") == 0) {
+    } else if (strstr(command, "U") != NULL) {
         if (currentPhase == PLAY) {
             commandNode.command = U;
             statusCode = UCommand();
         } else {
             printf("Command only available in the PLAY phase!\n");
         }
-    } else if (strcmp(command, "R") == 0) {
+    } else if (strstr(command, "R") != NULL) {
         if (currentPhase == PLAY) {
             commandNode.command = R;
             statusCode = RCommand();
         } else {
             printf("Command only available in the PLAY phase!\n");
         }
-    } else if (strcmp(command, "S") == 0) {
+    } else if (strstr(command, "S") != NULL) {
         if (currentPhase == PLAY) {
             commandNode.command = S;
-            if (strcmp(command, " ") == 0) {
+            if (strstr(command, " ") != NULL) {
                 char *arg = strtok(command, " ");
-                char path[40];
+                char path[100];
                 while (arg != NULL) {
                     strcpy(path, arg);
                     arg = strtok(NULL, " ");
@@ -356,17 +368,26 @@ int readCommand() {
         } else {
             printf("Command only available in the PLAY phase!\n");
         }
-    } else if (strcmp(command, "L") == 0) {
+    } else if (strstr(command, "L") != NULL) {
         if (currentPhase == PLAY) {
             commandNode.command = L;
-            char filename[20];
-            scanf("%s", &filename);
-            statusCode = LCommand(filename);
+            if (strstr(command, " ") != NULL) {
+                char *arg = strtok(command, " ");
+                char path[100];
+                while (arg != NULL) {
+                    strcpy(path, arg);
+                    arg = strtok(NULL, " ");
+                }
+                statusCode = LCommand(path);
+            }
         } else {
             printf("Command only available in the PLAY phase!\n");
         }
-    } else if (strcmp(command, "DEBUG") == 0) {
+    } else if (strstr(command, "DEBUG") != NULL) {
         switchCardStorage();
+    }
+    else {
+        statusCode = 400;
     }
 
     // Add command to command history
@@ -375,6 +396,9 @@ int readCommand() {
         commandNode.prev = commandHistory;
         commandHistory->next = &commandNode;
         commandHistory = &commandNode;
+    }
+    else {
+        commandHistory->status = statusCode;
     }
 
     return statusCode;

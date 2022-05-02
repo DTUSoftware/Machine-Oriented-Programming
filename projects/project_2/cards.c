@@ -162,6 +162,7 @@ int clearCardStorage() {
             else {
                 CardNode *cardNode = columnStorage[i];
                 columnStorage[i] = NULL;
+                free(cardNode->card);
                 free(cardNode);
             }
         }

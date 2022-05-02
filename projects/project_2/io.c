@@ -9,9 +9,10 @@
 
 // validate whether the file is open
 // file is the output of function
-int validateFile(char *fileName, char *fileMode, FileType fileType, FILE *file) {
-    file = fopen(fileName, fileMode);
+int validateFile(char *fileName, char *fileMode, FileType fileType, FILE **file) {
+    *file = fopen(fileName, fileMode);
     if (!file) {
+        printf("cannot open file with filename '%s'!\n", fileName);
         return -1;
     }
 
@@ -44,7 +45,7 @@ int validateFile(char *fileName, char *fileMode, FileType fileType, FILE *file) 
         }
         free(file_contents);
     }
-    rewind(file);
+    rewind(*file);
 
     return 0;
 }
@@ -103,8 +104,15 @@ int saveCards(char *fileName) {
 int loadCards(char *fileName, Card *cards) {
     // get and validate file
     FILE *file = NULL;
-    int fileValid = validateFile(fileName, "r", CARDS, file);
-    if (fileValid != 0) {
+    int fileValid = validateFile(fileName, "r", CARDS, &file);
+    if (file == NULL) {
+        if (fileValid != 0) {
+            return fileValid;
+        }
+        return -500;
+    }
+    else if (fileValid != 0) {
+        fclose(file);
         return fileValid;
     }
 
@@ -113,16 +121,33 @@ int loadCards(char *fileName, Card *cards) {
     stat(fileName, &sb);
     char *file_contents = malloc(sb.st_size);
 
-    for (int i = 0; i < 52; i++) {
-        if (fscanf(file, "%[^\n] ", file_contents) == EOF) {
+    for (int i = 0; i < 52;) {
+        // (fscanf(file, "%[^\n] ", &file_contents) == EOF)
+        if (fgets(file_contents, 3, file) == NULL) {
+            free(file_contents);
+            fclose(file);
             return -1;
         }
 
-        // validate if the line is a card
-        int gotCard = getCardFromName(file_contents, &cards[i]);
+        // if not newline
+        if (file_contents[0] != '\n') {
+            // validate if the line is a card
+            int gotCard = getCardFromName(file_contents, &cards[i]);
 
-        if (gotCard != 0) {
-            return gotCard;
+            if (gotCard != 0) {
+                if (gotCard == -1) {
+                    free(file_contents);
+                    fclose(file);
+                    return gotCard;
+                }
+                else {
+                    printf("DEBUG: Error reading card - code: %d\n", gotCard);
+                }
+            }
+            else {
+                cards[i].revealed = false;
+                i++;
+            }
         }
     }
 
