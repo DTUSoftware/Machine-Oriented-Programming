@@ -1,6 +1,8 @@
 #ifndef MACHINE_ORIENTED_PROGRAMMING_PROJECT_2_COMMANDS_H
 #define MACHINE_ORIENTED_PROGRAMMING_PROJECT_2_COMMANDS_H
 
+#include <stdbool.h>
+
 // Command enum
 typedef enum {
     NONE,
@@ -60,7 +62,7 @@ int PCommand();
 int QCommand();
 
 // game moves, where you can move the card from one pile to another
-int MCommand(char *command);
+int MCommand(char *command, bool fromBottom);
 
 // extra stuff if time is found
 // U command, undo the last move

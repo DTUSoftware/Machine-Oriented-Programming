@@ -91,17 +91,36 @@ int QCommand() {
 }
 
 // game moves, where you can move the card from one pile to another
-int MCommand(char *command) {
+int MCommand(char *command, bool fromBottom) {
     char pile = command[0];
-    char toPile = command[7];
-    int column = (int) command[1];
-    int toColumn = (int) command[8];
+    int column = atol(&command[1]);
+    char toPile;
+    int toColumn;
     char cardName[2];
-    cardName[0] = command[3];
-    cardName[1] = command[4];
-    // husk at free din bisse
-    Card *card = malloc(sizeof(Card));
-    getCardFromName(cardName, card);
+
+    Card *card;
+
+    if (fromBottom) {
+        toPile = command[4];
+        toColumn = atol(&command[5]);
+
+        CardNode *bottomNode = columns[column];
+        while (bottomNode->next) {
+            bottomNode = bottomNode->next;
+        }
+        card = bottomNode->card;
+    }
+    else {
+        toPile = command[7];
+        toColumn = atol(&command[8]);
+        cardName[0] = command[3];
+        cardName[1] = command[4];
+
+        // husk at free din bisse
+        card = malloc(sizeof(Card));
+        getCardFromName(cardName, card);
+    }
+
     switch (pile) {
         case 'C':
             if (column < 8 && column > 0) {
@@ -232,8 +251,11 @@ int MCommand(char *command) {
         default:
             return -1;
     }
-    // gør læreren glad :)
-    free(card);
+
+    if (!fromBottom) {
+        // gør læreren glad :)
+        free(card);
+    }
 
     return 0;
 }

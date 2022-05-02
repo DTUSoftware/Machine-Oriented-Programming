@@ -312,11 +312,17 @@ int readCommand() {
         } else {
             printf("Command only available in the PLAY phase!\n");
         }
-    } else if (strchr(command, ':') != NULL && strchr(command, '-') != NULL && strchr(command, '>') != NULL) {
+    // Move command
+    } else if (strchr(command, '-') != NULL && strchr(command, '>') != NULL) {
         if (currentPhase == PLAY) {
             commandNode.command = MOVE;
             // TODO: add data to commandNode
-            statusCode = MCommand(command);
+            if (strchr(command, ':') != NULL) {
+                statusCode = MCommand(command, false);
+            }
+            else {
+                statusCode = MCommand(command, true);
+            }
         } else {
             printf("Command only available in the PLAY phase!\n");
         }
