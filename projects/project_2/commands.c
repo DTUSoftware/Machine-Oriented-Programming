@@ -19,21 +19,45 @@ int LDCommand(char *fileName) {
     // clear the deck as well
     clearDeck();
 
+    bool malloced = false;
     if (fileName == NULL) {
         // load unshuffled deck of cards
-        return getUnshuffledDeck();
+        fileName = malloc(sizeof(char)*35);
+        malloced = true;
+        strcpy(fileName, "examples/decks/unshuffled.txt");
     }
-    else {
-        // load cards from file
-        Card *cards = malloc(sizeof(Card)*52);
-        int loadStatus = loadCards(fileName, cards);
-        if (loadStatus != 0) {
-            return loadStatus;
-        }
 
+    // load cards from file
+    Card *cards = malloc(sizeof(Card)*52);
+    int loadStatus;
+    int addStatus = -1;
+
+    loadStatus = loadCards(fileName, cards);
+    if (loadStatus == 0) {
         // add cards to deck
-        return addCardsToDeck(cards);
+        addStatus = addCardsToDeck(cards);
     }
+    if (addStatus != 0) {
+        char *fileName2 = malloc(sizeof(char)*200);
+        strcpy(fileName2, "../");
+        strcat(fileName2, fileName);
+        loadStatus = loadCards(fileName2, cards);
+        if (loadStatus == 0) {
+            // add cards to deck
+            addStatus = addCardsToDeck(cards);
+//                if (addStatus != 0) {
+//                    addStatus = addCardsToDeck(allCards);
+//                }
+        }
+        // TODO: make this free not kill itself
+        free(fileName2);
+    }
+
+    if (malloced) {
+        free(fileName);
+    }
+
+    return addStatus;
 }
 
 // [SW] function to print/draw the terminal window / GUI/CLI

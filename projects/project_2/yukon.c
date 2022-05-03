@@ -3,6 +3,7 @@
 #include "yukon.h"
 #include "cards.h"
 #include "io.h"
+#include "commands.h"
 
 CardNode *columns[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 CardNode *columnStorage[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
@@ -90,23 +91,5 @@ int addCardsToDeck(Card *cards) {
 // - get other column, get tail/head of linked list, check requirements in rules
 
 int getUnshuffledDeck() {
-    Card *cards = malloc(sizeof(Card)*52);
-    int loadStatus = loadCards("../examples/decks/unshuffled.txt", cards);
-    if (loadStatus != 0) {
-        return loadStatus;
-    }
-    // add cards to deck
-    int addStatus = addCardsToDeck(cards);
-    if (addStatus != 0) {
-        loadStatus = loadCards("examples/decks/unshuffled.txt", cards);
-        if (loadStatus != 0) {
-            return loadStatus;
-        }
-        // add cards to deck
-        addStatus = addCardsToDeck(cards);
-        if (addStatus != 0) {
-            addStatus = addCardsToDeck(allCards);
-        }
-    }
-    return addStatus;
+    return LDCommand("examples/decks/unshuffled.txt");
 }

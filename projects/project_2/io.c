@@ -9,10 +9,9 @@
 
 // validate whether the file is open
 // file is the output of function
-int validateFile(char *fileName, char *fileMode, FileType fileType, FILE **file) {
-    *file = fopen(fileName, fileMode);
-    if (!file) {
-        printf("cannot open file with filename '%s'!\n", fileName);
+int validateFile(char *fileName, char *fileMode, FileType fileType, FILE** file) {
+    if ((*file = fopen(fileName, fileMode)) == NULL) {
+        // printf("cannot open file with filename '%s'!\n", fileName);
         return -1;
     }
 
@@ -23,15 +22,16 @@ int validateFile(char *fileName, char *fileMode, FileType fileType, FILE **file)
 
     // validate the file if the mode is not write
     if (!strcmp(fileMode, "w")) {
-        char *file_contents = malloc(sb.st_size);
+        char *file_contents = (char *) malloc(sb.st_size);
         switch (fileType) {
             case CARDS:
-                while (fscanf(file, "%[^\n] ", file_contents) != EOF) {
+                while (fgets(file_contents, sizeof(file_contents), *file) != NULL) {
                     Card *card = NULL;
                     // validate if the line is a card
                     int gotCard = getCardFromName(file_contents, card);
 
                     if (gotCard != 0) {
+                        free(file_contents);
                         return gotCard;
                     }
                 }
@@ -52,8 +52,8 @@ int validateFile(char *fileName, char *fileMode, FileType fileType, FILE **file)
 
 int saveCards(char *fileName) {
     // get and validate file
-    FILE *file = NULL;
-    int fileValid = validateFile(fileName, "w", CARDS, file);
+    FILE *file;
+    int fileValid = validateFile(fileName, "w", CARDS, &file);
     if (fileValid != 0) {
         return fileValid;
     }
@@ -103,15 +103,10 @@ int saveCards(char *fileName) {
 
 int loadCards(char *fileName, Card *cards) {
     // get and validate file
-    FILE *file = NULL;
+    FILE *file;
     int fileValid = validateFile(fileName, "r", CARDS, &file);
-    if (file == NULL) {
-        if (fileValid != 0) {
-            return fileValid;
-        }
-        return -500;
-    }
-    else if (fileValid != 0) {
+
+    if (fileValid != 0) {
         fclose(file);
         return fileValid;
     }
@@ -119,11 +114,12 @@ int loadCards(char *fileName, Card *cards) {
     // load cards from file into cards array
     struct stat sb;
     stat(fileName, &sb);
+//    char file_contents[100];
     char *file_contents = malloc(sb.st_size);
 
     for (int i = 0; i < 52;) {
         // (fscanf(file, "%[^\n] ", &file_contents) == EOF)
-        if (fgets(file_contents, 3, file) == NULL) {
+        if (fgets(file_contents, sizeof(file_contents), file) == NULL) {
             free(file_contents);
             fclose(file);
             return -1;
@@ -160,7 +156,7 @@ int loadCards(char *fileName, Card *cards) {
 int saveState(char *fileName) {
     // get and validate file
     FILE *file = NULL;
-    int fileValid = validateFile(fileName, "w", STATE, file);
+    int fileValid = validateFile(fileName, "w", STATE, &file);
     if (fileValid != 0) {
         return fileValid;
     }
@@ -172,7 +168,7 @@ int saveState(char *fileName) {
 int loadState(char *fileName) {
     // get and validate file
     FILE *file = NULL;
-    int fileValid = validateFile(fileName, "r", STATE, file);
+    int fileValid = validateFile(fileName, "r", STATE, &file);
     if (fileValid != 0) {
         return fileValid;
     }

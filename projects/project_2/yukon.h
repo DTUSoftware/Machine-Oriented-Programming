@@ -4,6 +4,13 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+// Error enums
+typedef enum {
+    OK,
+    ERROR,
+    UNKNOWN_ERROR
+} StatusCode;
+
 // Card struct - bool value for face up or down
 typedef enum {
     CLUBS,
