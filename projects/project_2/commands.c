@@ -71,50 +71,42 @@ int SICommand(int split) {
     // clear card storage, in case there is something
     clearCardStorage();
 
-    Card cards[52];
-    int gotCards = getCardsFromDeck(cards);
+    CardNode *pile1 = malloc(sizeof(CardNode));
+    int gotCards = getCardsFromDeckAsLinkedList(pile1);
     if (gotCards != 0) {
         return gotCards;
     }
 
-    Card *pile1 = malloc(sizeof(Card)*split);
-    Card *pile2 = malloc(sizeof(Card)*(52-split));
-
-    for (int i = 0; i < 52; i++) {
-        if (i < split) {
-            pile1[i] = cards[i];
-        }
-        else {
-            pile2[i-split] = cards[i];
+    CardNode *pile2 = pile1;
+    for (int i = 0; i < split; i++) {
+        if (pile2->next) {
+            pile2 = pile2->next;
         }
     }
+    pile2->prev->next = NULL;
+    pile2->prev = NULL;
 
-    Card *shuffledPile = malloc(sizeof(Card)*52);
-    bool takePile1 = true;
-    int pile1N = 0;
-    int pile2N = 0;
-    for (int i = 0; i < 52; i++) {
-        if (takePile1 && pile1N < split) {
-            shuffledPile[i] = pile1[pile1N];
-            pile1N++;
-            takePile1 = false;
+    CardNode *currentSplittingCard = pile2;
+    CardNode *nextPile1;
+    for (int i = 0; i < split; i++) {
+        nextPile1 = pile1->next;
+
+        pile1->prev = currentSplittingCard->prev;
+        if (pile1->prev) {
+            pile1->prev->next = pile1;
         }
-        else {
-            if (pile2N < 52-split) {
-                shuffledPile[i] = pile2[pile2N];
-                pile2N++;
-            }
-            takePile1 = true;
-        }
+        pile1->next = currentSplittingCard;
+        currentSplittingCard->prev = pile1;
+
+        currentSplittingCard = currentSplittingCard->next;
+        pile1 = nextPile1;
     }
-
-    free(pile1);
-    free(pile2);
+    while (pile2->prev) {
+        pile2 = pile2->prev;
+    }
 
     clearDeck();
-    addCardsToDeck(shuffledPile);
-
-    free(shuffledPile);
+    addLinkedListCardsToDeck(pile2);
 
     return 0;
 }

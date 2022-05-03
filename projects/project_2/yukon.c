@@ -42,6 +42,49 @@ int clearDeck() {
 
 // Game phase enum (startup, etc.)
 
+int getCardsFromDeckAsLinkedList(CardNode *cards) {
+    int cardNum = 0;
+    int columnNums[7] = {0, 0, 0, 0, 0, 0, 0};
+    CardNode *currentParent = cards;
+    currentParent->prev = NULL;
+    currentParent->next = NULL;
+    currentParent->card = NULL;
+    while (cardNum < 52) {
+        for (int i = 0; i < 7; i++) {
+            if (cardNum < 52) {
+                CardNode *cardNode = columns[i];
+                int columnNum = 0;
+                while (cardNode->next && columnNum < columnNums[i]) {
+                    cardNode = cardNode->next;
+                    columnNum++;
+                }
+                if (columnNum == columnNums[i]) {
+                    Card *card = malloc(sizeof(Card));
+                    card->revealed = cardNode->card->revealed;
+                    card->number = cardNode->card->number;
+                    card->suit = cardNode->card->suit;
+
+                    if (!currentParent->card) {
+                        currentParent->card = card;
+                    }
+                    else {
+                        CardNode *newNode = malloc(sizeof(CardNode));
+                        newNode->prev = currentParent;
+                        newNode->prev->next = newNode;
+                        newNode->next = NULL;
+                        newNode->card = card;
+                        currentParent = newNode;
+                    }
+
+                    cardNum++;
+                    columnNums[i]++;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
 int getCardsFromDeck(Card *cards) {
     int cardNum = 0;
     int columnNums[7] = {0, 0, 0, 0, 0, 0, 0};
@@ -69,6 +112,39 @@ int getCardsFromDeck(Card *cards) {
     return 0;
 }
 
+int addLinkedListCardsToDeck(CardNode *cards) {
+    while (cards) {
+        for (int i = 0; i < 7; i++) {
+            if (cards) {
+                if (!columns[i]) {
+                    columns[i] = cards;
+                    columns[i]->prev = NULL;
+                }
+                else {
+                    CardNode *next = columns[i]->next;
+                    CardNode *prev = columns[i];
+                    while (next) {
+                        prev = next;
+                        next = next->next;
+                    }
+                    prev->next = cards;
+                    cards->prev = prev;
+                }
+
+                if (cards->next) {
+                    cards = cards->next;
+                    cards->prev->next = NULL;
+                    cards->prev = NULL;
+                }
+                else {
+                    cards->next = NULL;
+                    cards = NULL;
+                }
+            }
+        }
+    }
+    return 0;
+}
 
 int addCardsToDeck(Card *cards) {
     int cardNum = 0;
