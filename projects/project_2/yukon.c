@@ -42,6 +42,33 @@ int clearDeck() {
 
 // Game phase enum (startup, etc.)
 
+int getCardsFromDeck(Card *cards) {
+    int cardNum = 0;
+    int columnNums[7] = {0, 0, 0, 0, 0, 0, 0};
+    while (cardNum < 52) {
+        for (int i = 0; i < 7; i++) {
+            if (cardNum < 52) {
+                CardNode *cardNode = columns[i];
+                int columnNum = 0;
+                while (cardNode->next && columnNum < columnNums[i]) {
+                    cardNode = cardNode->next;
+                    columnNum++;
+                }
+                if (columnNum == columnNums[i]) {
+                    Card *card = malloc(sizeof(Card));
+                    card->revealed = cardNode->card->revealed;
+                    card->number = cardNode->card->number;
+                    card->suit = cardNode->card->suit;
+                    cards[cardNum] = *card;
+                    cardNum++;
+                    columnNums[i]++;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
 
 int addCardsToDeck(Card *cards) {
     int cardNum = 0;

@@ -276,7 +276,7 @@ int readCommand() {
                     arg = strtok(NULL, " ");
                 }
                 statusCode = SICommand(integer);
-            } else { statusCode = SICommand(NULL); }
+            } else { statusCode = SICommand(52/2); }
 
         } else {
             printf("Command only available in the STARTUP phase!\n");

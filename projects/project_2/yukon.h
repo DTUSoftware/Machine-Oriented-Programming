@@ -63,5 +63,6 @@ extern Phase currentPhase;
 int getUnshuffledDeck();
 
 int addCardsToDeck(Card *cards);
+int getCardsFromDeck(Card *cards);
 
 #endif //MACHINE_ORIENTED_PROGRAMMING_PROJECT_2_YUKON_H

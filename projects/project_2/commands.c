@@ -71,6 +71,51 @@ int SICommand(int split) {
     // clear card storage, in case there is something
     clearCardStorage();
 
+    Card cards[52];
+    int gotCards = getCardsFromDeck(cards);
+    if (gotCards != 0) {
+        return gotCards;
+    }
+
+    Card *pile1 = malloc(sizeof(Card)*split);
+    Card *pile2 = malloc(sizeof(Card)*(52-split));
+
+    for (int i = 0; i < 52; i++) {
+        if (i < split) {
+            pile1[i] = cards[i];
+        }
+        else {
+            pile2[i-split] = cards[i];
+        }
+    }
+
+    Card *shuffledPile = malloc(sizeof(Card)*52);
+    bool takePile1 = true;
+    int pile1N = 0;
+    int pile2N = 0;
+    for (int i = 0; i < 52; i++) {
+        if (takePile1 && pile1N < split) {
+            shuffledPile[i] = pile1[pile1N];
+            pile1N++;
+            takePile1 = false;
+        }
+        else {
+            if (pile2N < 52-split) {
+                shuffledPile[i] = pile2[pile2N];
+                pile2N++;
+            }
+            takePile1 = true;
+        }
+    }
+
+    free(pile1);
+    free(pile2);
+
+    clearDeck();
+    addCardsToDeck(shuffledPile);
+
+    free(shuffledPile);
+
     return 0;
 }
 
