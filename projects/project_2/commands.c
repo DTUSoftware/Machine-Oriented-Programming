@@ -116,6 +116,65 @@ int SRCommand() {
     // clear card storage, in case there is something
     clearCardStorage();
 
+    CardNode *deck = malloc(sizeof(CardNode));
+    int gotCards = getCardsFromDeckAsLinkedList(deck);
+    if (gotCards != 0) {
+        return gotCards;
+    }
+
+    CardNode *randomizedDeck = NULL;
+
+    // create the randomized deck
+    int possiblePositions = 1;
+    while (deck) {
+        if (deck->next) {
+            deck->next->prev = NULL;
+        }
+
+        int position = rand() % possiblePositions;
+        CardNode *insertion = randomizedDeck;
+        int direction = 0;
+        while (position > 0) {
+            insertion = insertion->next;
+            position--;
+        }
+        if (!insertion) {
+            insertion = deck;
+        }
+
+        deck = deck->next;
+        insertion->next = NULL;
+    }
+
+//    // create the randomized deck - rand choice method
+//    int numOfCards = 52;
+//    while (numOfCards >= 0) {
+//        // get random card
+//        int randCard = rand() % numOfCards;
+//
+//        CardNode *card = deck;
+//        while (randCard > 0) {
+//            card = card->next;
+//            randCard--;
+//        }
+//
+//        // remove card from deck
+//        if (card->prev) {
+//            card->prev->next = card->next;
+//        }
+//        if (card->next) {
+//            card->next->prev = card->prev;
+//        }
+//        card->prev = NULL;
+//        card->next = NULL;
+//
+//        // Add card to random position in
+//
+//        numOfCards--;
+//    }
+
+
+
     return 0;
 }
 
