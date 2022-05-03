@@ -200,8 +200,10 @@ int MCommand(char *command, bool fromBottom) {
                 if (toCard->card->suit != currentCard->card->suit &&
                     toCard->card->number - 1 == currentCard->card->number) {
                     currentCard->prev->next = NULL;
+                    currentCard->prev->card->revealed = true;
                     currentCard->prev = toCard;
                     toCard->next = currentCard;
+
                 } else {
                     if (!fromBottom) free(card);
                     return -6;
@@ -230,8 +232,27 @@ int MCommand(char *command, bool fromBottom) {
                     currentCard->card->number - 1 == toCard->card->number &&
                     currentCard->next == NULL) {
                     currentCard->prev->next = NULL;
+                    currentCard->prev->card->revealed = true;
                     currentCard->prev = toCard;
                     toCard->next = currentCard;
+
+                    if (currentCard->card->number == 13){
+                        bool notking;
+                        for (int i=0; i>4; i++){
+                            CardNode *cardNode = foundations[i];
+                            while (cardNode->next) {cardNode = cardNode->next;}
+
+                            if (cardNode->next == NULL && cardNode->card->number != 13){
+                                notking = true;
+                                break;
+                            }
+                        }
+                        if (notking == false){
+                            printf("You have won the Yukon Solitaire \n");
+                            printf("Please write the command: LD to play again");
+                        }
+                    }
+
                 } else {
                     if (!fromBottom) free(card);
                     return -6;
@@ -246,7 +267,7 @@ int MCommand(char *command, bool fromBottom) {
 
     if (!fromBottom) {
         // gør læreren glad :)
-        free(card);
+        free(card); 
     }
 
     return 0;
