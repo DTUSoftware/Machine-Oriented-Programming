@@ -85,13 +85,19 @@ int SRCommand() {
 // SD saves the current deck of cards to a file
 int SDCommand(char *fileName) {
     // belive that filename is allocated by caller, but is set to null
+    bool malloced = false;
     if (fileName == NULL) {
+        malloced = true;
         fileName = malloc(sizeof(char)*10);
         strcpy(fileName, "cards.txt");
     }
 
-    printf("saving to %s", fileName);
+    // printf("saving to %s", fileName);
     saveCards(fileName);
+
+    if (malloced) {
+        free(fileName);
+    }
 
     return 0;
 }
