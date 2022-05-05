@@ -78,7 +78,6 @@ int saveCards(char *fileName) {
                 if (cardColumns[j] && cardColumns[j]->card) {
                     char cardName[] = "  ";
                     getCardName(cardColumns[j]->card, cardName, true);
-                    // TODO: fix death when fprintf
                     fprintf(file, "%s\n", cardName);
                     if (cardColumns[j]->next != NULL) {
                         cardColumns[j] = cardColumns[j]->next;
@@ -161,7 +160,7 @@ int saveState(char *fileName) {
         return fileValid;
     }
 
-    // todo: save the state
+    // TODO: save the state
 
     fclose(file);
     return 0;
@@ -175,7 +174,7 @@ int loadState(char *fileName) {
         return fileValid;
     }
 
-    // todo: load the state
+    // TODO: load the state
 
     // load state from state file into the columns and foundations
     fclose(file);

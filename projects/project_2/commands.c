@@ -50,7 +50,6 @@ int LDCommand(char *fileName) {
 //                    addStatus = addCardsToDeck(allCards);
 //                }
         }
-        // TODO: make this free not kill itself
         free(fileName2);
     }
 
@@ -238,8 +237,21 @@ int QQCommand() {
 // P command starts the game using the current card deck
 int PCommand() {
     currentPhase = PLAY;
-    // TODO: check if we're just continuing a game that we just paused
-    convertStartupToPlay();
+    // check if we're just continuing a game that we just paused
+    bool hasStorage = false;
+    for (int i = 0; i < 7; i++) {
+        if (columnStorage[i] != NULL) {
+            hasStorage = true;
+            break;
+        }
+    }
+
+    if (hasStorage) {
+        switchCardStorage();
+    }
+    else {
+        convertStartupToPlay();
+    }
     return 0;
 }
 
@@ -350,7 +362,6 @@ int MCommand(char *command, bool fromBottom) {
 
             if (toCard == NULL) {
                 if (currentCard->card->number == 1 && currentCard->next == NULL) {
-                    // TODO might not work :) someone can maybe fix if they are giga chad aka Marcus
                     currentCard->prev->next = NULL;
                     foundations[toColumn - 1] = currentCard;
                     currentCard->prev = NULL;

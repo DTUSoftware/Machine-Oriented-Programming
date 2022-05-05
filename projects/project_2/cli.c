@@ -186,7 +186,6 @@ int readCommand() {
             strcpy(lastCommandName, "Q");
             break;
         case MOVE:
-            // TODO: use move data instead
             strcpy(lastCommandName, moveHistory->commandData);
             break;
         case U:
@@ -329,7 +328,6 @@ int readCommand() {
     } else if (strchr(command, '-') != NULL && strchr(command, '>') != NULL) {
         if (currentPhase == PLAY) {
             commandNode.command = MOVE;
-            // TODO: add data to commandNode
             if (strchr(command, ':') != NULL) {
                 statusCode = MCommand(command, false);
             }
