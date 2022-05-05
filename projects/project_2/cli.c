@@ -187,7 +187,7 @@ int readCommand() {
             break;
         case MOVE:
             // TODO: use move data instead
-            strcpy(lastCommandName, "MOVE");
+            strcpy(lastCommandName, moveHistory->commandData);
             break;
         case U:
             strcpy(lastCommandName, "U");
@@ -336,6 +336,11 @@ int readCommand() {
             else {
                 statusCode = MCommand(command, true);
             }
+
+            commandNode.commandData = command;
+            commandNode.prev = moveHistory;
+            moveHistory->next = &commandNode;
+            moveHistory = &commandNode;
         } else {
             printf("Command only available in the PLAY phase!\n");
         }
@@ -393,11 +398,6 @@ int readCommand() {
     // Add command to command history
     if (commandNode.command != NONE) {
         commandNode.status = statusCode;
-        if (commandNode.command == MOVE) {
-            commandNode.prev = moveHistory;
-            moveHistory->next = &commandNode;
-            moveHistory = &commandNode;
-        }
         lastCommand = &commandNode;
     }
     else {
