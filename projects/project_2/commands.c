@@ -127,24 +127,55 @@ int SRCommand() {
     // create the randomized deck
     int possiblePositions = 1;
     while (deck) {
-        if (deck->next) {
-            deck->next->prev = NULL;
+        CardNode *nextDeck = deck->next;
+        if (nextDeck) {
+            nextDeck->prev = NULL;
         }
 
-        int position = rand() % possiblePositions;
-        CardNode *insertion = randomizedDeck;
-        int direction = 0;
-        while (position > 0) {
-            insertion = insertion->next;
-            position--;
+        if (randomizedDeck == NULL) {
+            randomizedDeck = deck;
+            randomizedDeck->next = NULL;
         }
-        if (!insertion) {
-            insertion = deck;
+        else {
+            int position = rand() % possiblePositions;
+            CardNode *insertionPoint = randomizedDeck;
+
+            while (position > 0) {
+                insertionPoint = insertionPoint->next;
+                position--;
+            }
+
+            if (insertionPoint) {
+                CardNode *prev = insertionPoint->prev;
+                bool hasPrev = false;
+                if (prev) {
+                    hasPrev = true;
+                    prev->next = deck;
+                }
+                deck->prev = prev;
+                deck->next = insertionPoint;
+                insertionPoint->prev = deck;
+                if (!hasPrev) {
+                    randomizedDeck = deck;
+                }
+            }
+            else {
+                insertionPoint = randomizedDeck;
+                while (insertionPoint->next) {
+                    insertionPoint = insertionPoint->next;
+                }
+                insertionPoint->next = deck;
+                deck->next = NULL;
+                deck->prev = insertionPoint;
+            }
         }
 
-        deck = deck->next;
-        insertion->next = NULL;
+        deck = nextDeck;
+        possiblePositions++;
     }
+
+    clearDeck();
+    addLinkedListCardsToDeck(randomizedDeck);
 
 //    // create the randomized deck - rand choice method
 //    int numOfCards = 52;
