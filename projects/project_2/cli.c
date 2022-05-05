@@ -159,62 +159,62 @@ int drawCards(bool reveal) {
 int readCommand() {
     // mads please fix my retardedness
     // fixed, good old stackoverflow uWu https://stackoverflow.com/questions/32313150/array-type-char-is-not-assignable
-    char lastCommand[11];
-    switch (commandHistory->command) {
+    char lastCommandName[11];
+    switch (lastCommand->command) {
         case LD:
-            strcpy(lastCommand, "LD");
+            strcpy(lastCommandName, "LD");
             break;
         case SW:
-            strcpy(lastCommand, "SW");
+            strcpy(lastCommandName, "SW");
             break;
         case SI:
-            strcpy(lastCommand, "SI");
+            strcpy(lastCommandName, "SI");
             break;
         case SR:
-            strcpy(lastCommand, "SR");
+            strcpy(lastCommandName, "SR");
             break;
         case SD:
-            strcpy(lastCommand, "SD");
+            strcpy(lastCommandName, "SD");
             break;
         case QQ:
-            strcpy(lastCommand, "QQ");
+            strcpy(lastCommandName, "QQ");
             break;
         case P:
-            strcpy(lastCommand, "P");
+            strcpy(lastCommandName, "P");
             break;
         case Q:
-            strcpy(lastCommand, "Q");
+            strcpy(lastCommandName, "Q");
             break;
         case MOVE:
             // TODO: use move data instead
-            strcpy(lastCommand, "MOVE");
+            strcpy(lastCommandName, "MOVE");
             break;
         case U:
-            strcpy(lastCommand, "U");
+            strcpy(lastCommandName, "U");
             break;
         case R:
-            strcpy(lastCommand, "R");
+            strcpy(lastCommandName, "R");
             break;
         case S:
-            strcpy(lastCommand, "S");
+            strcpy(lastCommandName, "S");
             break;
         case L:
-            strcpy(lastCommand, "L");
+            strcpy(lastCommandName, "L");
             break;
         default:
-            strcpy(lastCommand, "");
+            strcpy(lastCommandName, "");
             break;
     }
 
-    if (commandHistory->command != SW) {
+    if (lastCommand->command != SW) {
         drawCards(false);
     }
     printf("\n");
 
-    printf("Last Command: %s\n", lastCommand);
+    printf("Last Command: %s\n", lastCommandName);
     char status[30];
     char unknownStatusFormat[] = "UNKNOWN ERROR (Code: %d)";
-    switch (commandHistory->status) {
+    switch (lastCommand->status) {
         case 0:
             strcpy(status, "OK");
             break;
@@ -226,7 +226,7 @@ int readCommand() {
             strcpy(status, "Unknown Command");
             break;
         default:
-            sprintf(status, unknownStatusFormat, commandHistory->status);
+            sprintf(status, unknownStatusFormat, lastCommand->status);
             break;
     }
     printf("Message: %s\n", status);
@@ -393,12 +393,15 @@ int readCommand() {
     // Add command to command history
     if (commandNode.command != NONE) {
         commandNode.status = statusCode;
-        commandNode.prev = commandHistory;
-        commandHistory->next = &commandNode;
-        commandHistory = &commandNode;
+        if (commandNode.command == MOVE) {
+            commandNode.prev = moveHistory;
+            moveHistory->next = &commandNode;
+            moveHistory = &commandNode;
+        }
+        lastCommand = &commandNode;
     }
     else {
-        commandHistory->status = statusCode;
+        lastCommand->status = statusCode;
     }
 
     return statusCode;

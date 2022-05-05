@@ -6,7 +6,8 @@
 #include "yukon.h"
 #include "io.h"
 
-CommandNode *commandHistory;
+CommandNode *moveHistory;
+CommandNode *lastCommand;
 
 // Command enum
 

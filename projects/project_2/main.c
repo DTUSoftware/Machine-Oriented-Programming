@@ -7,12 +7,13 @@ int main() {
     CommandNode startCommandNode;
     startCommandNode.command = NONE;
     startCommandNode.status = 0;
-    commandHistory = &startCommandNode;
+    moveHistory = &startCommandNode;
+    lastCommand = &startCommandNode;
 
     while (true) {
         int status = readCommand();
         // QQ break
-        if (status == 0 && commandHistory->command == QQ) {
+        if (status == 0 && lastCommand->command == QQ) {
             break;
         }
     }

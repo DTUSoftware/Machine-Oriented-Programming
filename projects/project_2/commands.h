@@ -35,7 +35,8 @@ typedef struct CommandNodeP {
 // in order to be able to undo commands
 // the commands that have been undone can be stored in a linked list
 // in order to be able to redo commands
-extern CommandNode *commandHistory;
+extern CommandNode *moveHistory;
+extern CommandNode *lastCommand;
 
 // loads a deck of cards from a file, if no file is given, we load a new deck of cards
 int LDCommand(char *fileName);

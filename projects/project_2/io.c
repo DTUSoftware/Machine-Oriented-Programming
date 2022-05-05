@@ -161,6 +161,8 @@ int saveState(char *fileName) {
         return fileValid;
     }
 
+    // todo: save the state
+
     fclose(file);
     return 0;
 }
@@ -172,6 +174,8 @@ int loadState(char *fileName) {
     if (fileValid != 0) {
         return fileValid;
     }
+
+    // todo: load the state
 
     // load state from state file into the columns and foundations
     fclose(file);
