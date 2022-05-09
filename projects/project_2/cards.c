@@ -146,7 +146,7 @@ int convertStartupToPlay() {
         }
     }
 
-    return 0;
+    return 200;
 }
 
 // clears the card storage, if the user loads a new deck or smthn
@@ -167,7 +167,7 @@ int clearCardStorage() {
             }
         }
     }
-    return 0;
+    return 200;
 }
 
 // save cards from current game to memory
@@ -210,5 +210,5 @@ int switchCardStorage() {
             columns[i] = tempColumnPointer;
         }
     }
-    return 0;
+    return 200;
 }

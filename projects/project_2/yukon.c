@@ -34,7 +34,7 @@ int clearDeck() {
         }
         columns[i] = NULL;
     }
-    return 0;
+    return 200;
 }
 
 // Card struct - bool value for face up or down
@@ -82,7 +82,7 @@ int getCardsFromDeckAsLinkedList(CardNode *cards) {
             }
         }
     }
-    return 0;
+    return 200;
 }
 
 int getCardsFromDeck(Card *cards) {
@@ -109,7 +109,7 @@ int getCardsFromDeck(Card *cards) {
             }
         }
     }
-    return 0;
+    return 200;
 }
 
 int addLinkedListCardsToDeck(CardNode *cards) {
@@ -143,7 +143,7 @@ int addLinkedListCardsToDeck(CardNode *cards) {
             }
         }
     }
-    return 0;
+    return 200;
 }
 
 int addCardsToDeck(Card *cards) {
@@ -186,7 +186,7 @@ int addCardsToDeck(Card *cards) {
         }
     }
 
-    return 0;
+    return 200;
 }
 
 

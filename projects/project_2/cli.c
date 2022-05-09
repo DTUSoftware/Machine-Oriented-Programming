@@ -43,12 +43,12 @@ int getCardName(Card *card, char *cardName, bool reveal) {
                 break;
         }
     }
-    return 0;
+    return 200;
 };
 
 int getCardFromName(char *cardName, Card *card) {
     if (cardName == NULL) {
-        return -1;
+        return 400;
     }
 
 //    printf("%s\n", cardName);
@@ -75,7 +75,7 @@ int getCardFromName(char *cardName, Card *card) {
                 card->number = atoi(&cardName[0]);
             }
             else {
-                return -2;
+                return 400;
             }
             break;
     }
@@ -95,10 +95,10 @@ int getCardFromName(char *cardName, Card *card) {
             card->suit = SPADES;
             break;
         default:
-            return -3;
+            return 400;
     }
 
-    return 0;
+    return 200;
 }
 
 int drawCards(bool reveal) {
@@ -153,7 +153,7 @@ int drawCards(bool reveal) {
         }
 
     }
-    return 0;
+    return 200;
 };
 
 int readCommand() {
@@ -214,15 +214,29 @@ int readCommand() {
     char status[30];
     char unknownStatusFormat[] = "UNKNOWN ERROR (Code: %d)";
     switch (lastCommand->status) {
-        case 0:
+        case 200:
             strcpy(status, "OK");
             break;
-        case -1:
-            strcpy(status, "ERROR");
-            break;
         case 400:
-            // bad request
-            strcpy(status, "Unknown Command");
+            strcpy(status, "Bad Request");
+            break;
+        case 401:
+            strcpy(status, "Invalid Target");
+            break;
+        case 402:
+            strcpy(status, "Illegal Move");
+            break;
+        case 403:
+            strcpy(status, "IO Error");
+            break;
+        case 404:
+            strcpy(status, "File Syntax Error");
+            break;
+        case 500:
+            strcpy(status, "Internal Error");
+            break;
+        case 501:
+            strcpy(status, "Not Implemented");
             break;
         default:
             sprintf(status, unknownStatusFormat, lastCommand->status);

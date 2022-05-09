@@ -6,14 +6,14 @@
 int main() {
     CommandNode startCommandNode;
     startCommandNode.command = NONE;
-    startCommandNode.status = 0;
+    startCommandNode.status = 200;
     moveHistory = &startCommandNode;
     lastCommand = &startCommandNode;
 
     while (true) {
         int status = readCommand();
         // QQ break
-        if (status == 0 && lastCommand->command == QQ) {
+        if (status == 200 && lastCommand->command == QQ) {
             break;
         }
     }

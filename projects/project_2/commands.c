@@ -34,19 +34,19 @@ int LDCommand(char *fileName) {
     int addStatus = -1;
 
     loadStatus = loadCards(fileName, cards);
-    if (loadStatus == 0) {
+    if (loadStatus == 200) {
         // add cards to deck
         addStatus = addCardsToDeck(cards);
     }
-    if (addStatus != 0) {
+    if (addStatus != 200) {
         char *fileName2 = malloc(sizeof(char)*200);
         strcpy(fileName2, "../");
         strcat(fileName2, fileName);
         loadStatus = loadCards(fileName2, cards);
-        if (loadStatus == 0) {
+        if (loadStatus == 200) {
             // add cards to deck
             addStatus = addCardsToDeck(cards);
-//                if (addStatus != 0) {
+//                if (addStatus != 200) {
 //                    addStatus = addCardsToDeck(allCards);
 //                }
         }
@@ -63,7 +63,7 @@ int LDCommand(char *fileName) {
 // [SW] function to print/draw the terminal window / GUI/CLI
 int SWCommand() {
     drawCards(true);
-    return 0;
+    return 200;
 }
 
 // SI, splits the card deck into to piles
@@ -73,7 +73,7 @@ int SICommand(int split) {
 
     CardNode *pile1 = malloc(sizeof(CardNode));
     int gotCards = getCardsFromDeckAsLinkedList(pile1);
-    if (gotCards != 0) {
+    if (gotCards != 200) {
         return gotCards;
     }
 
@@ -108,7 +108,7 @@ int SICommand(int split) {
     clearDeck();
     addLinkedListCardsToDeck(pile2);
 
-    return 0;
+    return 200;
 }
 
 // SR command, shuffles the card deck
@@ -118,7 +118,7 @@ int SRCommand() {
 
     CardNode *deck = malloc(sizeof(CardNode));
     int gotCards = getCardsFromDeckAsLinkedList(deck);
-    if (gotCards != 0) {
+    if (gotCards != 200) {
         return gotCards;
     }
 
@@ -206,7 +206,7 @@ int SRCommand() {
 
 
 
-    return 0;
+    return 200;
 }
 
 // SD saves the current deck of cards to a file
@@ -226,12 +226,12 @@ int SDCommand(char *fileName) {
         free(fileName);
     }
 
-    return 0;
+    return 200;
 }
 
 // QQ command, quits the program
 int QQCommand() {
-    return 0;
+    return 200;
 }
 
 // P command starts the game using the current card deck
@@ -252,22 +252,22 @@ int PCommand() {
     else {
         convertStartupToPlay();
     }
-    return 0;
+    return 200;
 }
 
 // Q command quits the game and goes back to startup
 int QCommand() {
     currentPhase = STARTUP;
     switchCardStorage();
-    return 0;
+    return 200;
 }
 
 // game moves, where you can move the card from one pile to another
 int MCommand(char *command, bool fromBottom) {
     char pile = command[0];
     int column = atol(&command[1]);
-    if (((column > 7 && pile == 'C') || (column > 4 && pile == 'F')) || column < 1) {
-        return -1;
+    if (((column > 7 && pile == 'C') || (column > 4 && pile == 'F')) || column < 1 || (pile != 'C' && pile != 'F')) {
+        return 401;
     }
     char toPile;
     int toColumn;
@@ -296,9 +296,9 @@ int MCommand(char *command, bool fromBottom) {
         getCardFromName(cardName, card);
     }
 
-    if (((toColumn > 7 && toPile == 'C') || (toColumn > 4 && toPile == 'F')) || toColumn < 1) {
+    if (((toColumn > 7 && toPile == 'C') || (toColumn > 4 && toPile == 'F')) || toColumn < 1 || (toPile != 'C' && toPile != 'F')) {
         if (!fromBottom) free(card);
-        return -1;
+        return 401;
     }
 
     CardNode *currentCard;
@@ -309,20 +309,17 @@ int MCommand(char *command, bool fromBottom) {
         case 'F':
             currentCard = foundations[column - 1];
             break;
-        default:
-            if (!fromBottom) free(card);
-            return -2;
     }
     while (currentCard->card->number != card->number || currentCard->card->suit != card->suit) {
         if (!currentCard->next) {
             if (!fromBottom) free(card);
-            return -3;
+            return 402;
         }
         currentCard = currentCard->next;
     }
     if (!currentCard->card->revealed) {
         if (!fromBottom) free(card);
-        return -4;
+        return 402;
     }
 
     CardNode *toCard;
@@ -337,7 +334,7 @@ int MCommand(char *command, bool fromBottom) {
                     currentCard->prev = NULL;
                 } else {
                     if (!fromBottom) free(card);
-                    return -5;
+                    return 402;
                 }
             } else {
                 while (toCard->next) {
@@ -352,7 +349,7 @@ int MCommand(char *command, bool fromBottom) {
 
                 } else {
                     if (!fromBottom) free(card);
-                    return -6;
+                    return 402;
                 }
             }
 
@@ -367,7 +364,7 @@ int MCommand(char *command, bool fromBottom) {
                     currentCard->prev = NULL;
                 } else {
                     if (!fromBottom) free(card);
-                    return -5;
+                    return 402;
                 }
             } else {
                 while (toCard->next) {
@@ -400,14 +397,11 @@ int MCommand(char *command, bool fromBottom) {
 
                 } else {
                     if (!fromBottom) free(card);
-                    return -6;
+                    return 402;
                 }
             }
 
             break;
-        default:
-            if (!fromBottom) free(card);
-            return -2;
     }
 
     if (!fromBottom) {
@@ -415,22 +409,31 @@ int MCommand(char *command, bool fromBottom) {
         free(card); 
     }
 
-    return 0;
+    return 200;
 }
 
 // extra stuff if time is found
 // U command, undo the last move
 int UCommand() {
-    return 0;
+    // TODO: remove return when function done
+    return 501;
+
+    return 200;
 }
 
 // R command, redo the last move
 int RCommand() {
-    return 0;
+    // TODO: remove return when function done
+    return 501;
+
+    return 200;
 }
 
 // S command saves the current game to a file
 int SCommand(char *fileName) {
+    // TODO: remove return when function done
+    return 501;
+
     // belive that filename is allocated by caller, but is set to null
     if (fileName == NULL) {
         fileName = malloc(sizeof(char)*14);
@@ -442,5 +445,8 @@ int SCommand(char *fileName) {
 
 // L command loads a game from a file
 int LCommand(char *fileName) {
+    // TODO: remove return when function done
+    return 501;
+
     return loadState(fileName);
 }

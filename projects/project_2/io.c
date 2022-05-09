@@ -12,12 +12,12 @@
 int validateFile(char *fileName, char *fileMode, FileType fileType, FILE** file) {
     if ((*file = fopen(fileName, fileMode)) == NULL) {
         // printf("cannot open file with filename '%s'!\n", fileName);
-        return -1;
+        return 403;
     }
 
     struct stat sb;
     if (stat(fileName, &sb) == -1) {
-        return -2;
+        return 403;
     }
 
     // validate the file if the mode is not write
@@ -30,8 +30,11 @@ int validateFile(char *fileName, char *fileMode, FileType fileType, FILE** file)
                     // validate if the line is a card
                     int gotCard = getCardFromName(file_contents, card);
 
-                    if (gotCard != 0) {
+                    if (gotCard != 200) {
                         free(file_contents);
+                        if (gotCard == 400) {
+                            return 404;
+                        }
                         return gotCard;
                     }
                 }
@@ -47,14 +50,14 @@ int validateFile(char *fileName, char *fileMode, FileType fileType, FILE** file)
     }
     rewind(*file);
 
-    return 0;
+    return 200;
 }
 
 int saveCards(char *fileName) {
     // get and validate file
     FILE *file;
     int fileValid = validateFile(fileName, "w", CARDS, &file);
-    if (fileValid != 0) {
+    if (fileValid != 200) {
         return fileValid;
     }
 
@@ -97,7 +100,7 @@ int saveCards(char *fileName) {
     }
 
     fclose(file);
-    return 0;
+    return 200;
 }
 
 int loadCards(char *fileName, Card *cards) {
@@ -105,7 +108,7 @@ int loadCards(char *fileName, Card *cards) {
     FILE *file;
     int fileValid = validateFile(fileName, "r", CARDS, &file);
 
-    if (fileValid != 0) {
+    if (fileValid != 200) {
         fclose(file);
         return fileValid;
     }
@@ -129,11 +132,11 @@ int loadCards(char *fileName, Card *cards) {
             // validate if the line is a card
             int gotCard = getCardFromName(file_contents, &cards[i]);
 
-            if (gotCard != 0) {
-                if (gotCard == -1) {
+            if (gotCard != 200) {
+                if (gotCard == 400) {
                     free(file_contents);
                     fclose(file);
-                    return gotCard;
+                    return 404;
                 }
                 else {
                     printf("DEBUG: Error reading card - code: %d\n", gotCard);
@@ -149,28 +152,28 @@ int loadCards(char *fileName, Card *cards) {
     free(file_contents);
 
     fclose(file);
-    return 0;
+    return 200;
 }
 
 int saveState(char *fileName) {
     // get and validate file
     FILE *file = NULL;
     int fileValid = validateFile(fileName, "w", STATE, &file);
-    if (fileValid != 0) {
+    if (fileValid != 200) {
         return fileValid;
     }
 
     // TODO: save the state
 
     fclose(file);
-    return 0;
+    return 200;
 }
 
 int loadState(char *fileName) {
     // get and validate file
     FILE *file = NULL;
     int fileValid = validateFile(fileName, "r", STATE, &file);
-    if (fileValid != 0) {
+    if (fileValid != 200) {
         return fileValid;
     }
 
@@ -178,5 +181,5 @@ int loadState(char *fileName) {
 
     // load state from state file into the columns and foundations
     fclose(file);
-    return 0;
+    return 200;
 }
