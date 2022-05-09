@@ -263,7 +263,7 @@ int QCommand() {
 }
 
 // game moves, where you can move the card from one pile to another
-int MCommand(char *command, bool fromBottom) {
+int MCommand(char *command, bool fromBottom, bool force) {
     char pile = command[0];
     int column = atol(&command[1]);
     if (((column > 7 && pile == 'C') || (column > 4 && pile == 'F')) || column < 1 || (pile != 'C' && pile != 'F')) {
@@ -305,21 +305,27 @@ int MCommand(char *command, bool fromBottom) {
     switch (pile) {
         case 'C':
             currentCard = columns[column - 1];
+
+            while (currentCard->card->number != card->number || currentCard->card->suit != card->suit) {
+                if (!currentCard->next) {
+                    if (!fromBottom) free(card);
+                    return 402;
+                }
+                currentCard = currentCard->next;
+            }
+            if (!currentCard->card->revealed) {
+                if (!fromBottom) free(card);
+                return 402;
+            }
+
             break;
         case 'F':
             currentCard = foundations[column - 1];
+            if (currentCard->card->number != card->number && currentCard->card->suit != card->suit) {
+                if (!fromBottom) free(card);
+                return 402;
+            }
             break;
-    }
-    while (currentCard->card->number != card->number || currentCard->card->suit != card->suit) {
-        if (!currentCard->next) {
-            if (!fromBottom) free(card);
-            return 402;
-        }
-        currentCard = currentCard->next;
-    }
-    if (!currentCard->card->revealed) {
-        if (!fromBottom) free(card);
-        return 402;
     }
 
     CardNode *toCard;
@@ -328,9 +334,10 @@ int MCommand(char *command, bool fromBottom) {
             toCard = columns[toColumn - 1];
 
             if (toCard == NULL) {
-                if (currentCard->card->number == 13) {
+                if (currentCard->card->number == 13 || force) {
                     if (currentCard->prev) {
                         currentCard->prev->next = NULL;
+                        currentCard->prev->card->revealed = true;
                     }
                     else {
                         switch (pile) {
@@ -352,8 +359,8 @@ int MCommand(char *command, bool fromBottom) {
                 while (toCard->next) {
                     toCard = toCard->next;
                 }
-                if (toCard->card->suit != currentCard->card->suit &&
-                    toCard->card->number - 1 == currentCard->card->number) {
+                if ((toCard->card->suit != currentCard->card->suit &&
+                    toCard->card->number - 1 == currentCard->card->number) || force) {
                     if (currentCard->prev) {
                         currentCard->prev->next = NULL;
                         currentCard->prev->card->revealed = true;
@@ -382,9 +389,10 @@ int MCommand(char *command, bool fromBottom) {
             toCard = foundations[toColumn - 1];
 
             if (toCard == NULL) {
-                if (currentCard->card->number == 1 && currentCard->next == NULL) {
+                if ((currentCard->card->number == 1 && currentCard->next == NULL) || force) {
                     if (currentCard->prev) {
                         currentCard->prev->next = NULL;
+                        currentCard->prev->card->revealed = true;
                     }
                     else {
                         switch (pile) {
@@ -403,12 +411,9 @@ int MCommand(char *command, bool fromBottom) {
                     return 402;
                 }
             } else {
-                while (toCard->next) {
-                    toCard = toCard->next;
-                }
-                if (currentCard->card->suit == toCard->card->suit &&
+                if ((currentCard->card->suit == toCard->card->suit &&
                     currentCard->card->number - 1 == toCard->card->number &&
-                    currentCard->next == NULL) {
+                    currentCard->next == NULL) || force) {
                     if (currentCard->prev) {
                         currentCard->prev->next = NULL;
                         currentCard->prev->card->revealed = true;
@@ -423,23 +428,23 @@ int MCommand(char *command, bool fromBottom) {
                                 break;
                         }
                     }
-                    currentCard->prev = toCard;
-                    toCard->next = currentCard;
+                    toCard->prev = currentCard;
+                    currentCard->next = toCard;
+                    foundations[toColumn - 1] = currentCard;
 
-                    if (currentCard->card->number == 13){
-                        bool notking;
-                        for (int i=0; i>4; i++){
+                    if (currentCard->card->number == 13) {
+                        bool not_all_kings = false;
+                        for (int i = 0; i < 4; i++){
                             CardNode *cardNode = foundations[i];
-                            while (cardNode->next) {cardNode = cardNode->next;}
 
-                            if (cardNode->next == NULL && cardNode->card->number != 13){
-                                notking = true;
+                            if (cardNode == NULL || cardNode->card->number != 13){
+                                not_all_kings = true;
                                 break;
                             }
                         }
-                        if (notking == false){
+                        if (not_all_kings == false){
                             printf("You have won the Yukon Solitaire \n");
-                            printf("Please write the command: LD to play again");
+                            printf("Please write the command: 'Q' to quit and play again!\n");
                         }
                     }
 

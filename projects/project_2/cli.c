@@ -342,11 +342,17 @@ int readCommand() {
     } else if (strchr(command, '-') != NULL && strchr(command, '>') != NULL) {
         if (currentPhase == PLAY) {
             commandNode.command = MOVE;
+
+            bool force = false;
+            if (strstr(command, "!!") != NULL) {
+                force = true;
+            }
+
             if (strchr(command, ':') != NULL) {
-                statusCode = MCommand(command, false);
+                statusCode = MCommand(command, false, force);
             }
             else {
-                statusCode = MCommand(command, true);
+                statusCode = MCommand(command, true, force);
             }
 
             commandNode.commandData = command;

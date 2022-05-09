@@ -63,7 +63,7 @@ int PCommand();
 int QCommand();
 
 // game moves, where you can move the card from one pile to another
-int MCommand(char *command, bool fromBottom);
+int MCommand(char *command, bool fromBottom, bool force);
 
 // extra stuff if time is found
 // U command, undo the last move
