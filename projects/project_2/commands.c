@@ -57,6 +57,10 @@ int LDCommand(char *fileName) {
         free(fileName);
     }
 
+    if (addStatus != 200 && loadStatus != 200) {
+        return loadStatus;
+    }
+
     return addStatus;
 }
 
