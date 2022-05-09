@@ -329,7 +329,19 @@ int MCommand(char *command, bool fromBottom) {
 
             if (toCard == NULL) {
                 if (currentCard->card->number == 13) {
-                    currentCard->prev->next = NULL;
+                    if (currentCard->prev) {
+                        currentCard->prev->next = NULL;
+                    }
+                    else {
+                        switch (pile) {
+                            case 'C':
+                                columns[column - 1] = NULL;
+                                break;
+                            case 'F':
+                                foundations[column - 1] = NULL;
+                                break;
+                        }
+                    }
                     columns[toColumn - 1] = currentCard;
                     currentCard->prev = NULL;
                 } else {
@@ -342,8 +354,20 @@ int MCommand(char *command, bool fromBottom) {
                 }
                 if (toCard->card->suit != currentCard->card->suit &&
                     toCard->card->number - 1 == currentCard->card->number) {
-                    currentCard->prev->next = NULL;
-                    currentCard->prev->card->revealed = true;
+                    if (currentCard->prev) {
+                        currentCard->prev->next = NULL;
+                        currentCard->prev->card->revealed = true;
+                    }
+                    else {
+                        switch (pile) {
+                            case 'C':
+                                columns[column - 1] = NULL;
+                                break;
+                            case 'F':
+                                foundations[column - 1] = NULL;
+                                break;
+                        }
+                    }
                     currentCard->prev = toCard;
                     toCard->next = currentCard;
 
@@ -359,7 +383,19 @@ int MCommand(char *command, bool fromBottom) {
 
             if (toCard == NULL) {
                 if (currentCard->card->number == 1 && currentCard->next == NULL) {
-                    currentCard->prev->next = NULL;
+                    if (currentCard->prev) {
+                        currentCard->prev->next = NULL;
+                    }
+                    else {
+                        switch (pile) {
+                            case 'C':
+                                columns[column - 1] = NULL;
+                                break;
+                            case 'F':
+                                foundations[column - 1] = NULL;
+                                break;
+                        }
+                    }
                     foundations[toColumn - 1] = currentCard;
                     currentCard->prev = NULL;
                 } else {
@@ -373,8 +409,20 @@ int MCommand(char *command, bool fromBottom) {
                 if (currentCard->card->suit == toCard->card->suit &&
                     currentCard->card->number - 1 == toCard->card->number &&
                     currentCard->next == NULL) {
-                    currentCard->prev->next = NULL;
-                    currentCard->prev->card->revealed = true;
+                    if (currentCard->prev) {
+                        currentCard->prev->next = NULL;
+                        currentCard->prev->card->revealed = true;
+                    }
+                    else {
+                        switch (pile) {
+                            case 'C':
+                                columns[column - 1] = NULL;
+                                break;
+                            case 'F':
+                                foundations[column - 1] = NULL;
+                                break;
+                        }
+                    }
                     currentCard->prev = toCard;
                     toCard->next = currentCard;
 
