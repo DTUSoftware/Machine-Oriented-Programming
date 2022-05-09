@@ -211,7 +211,7 @@ int readCommand() {
     printf("\n");
 
     printf("Last Command: %s\n", lastCommandName);
-    char status[30];
+    char status[45];
     char unknownStatusFormat[] = "UNKNOWN ERROR (Code: %d)";
     switch (lastCommand->status) {
         case 200:
@@ -231,6 +231,12 @@ int readCommand() {
             break;
         case 404:
             strcpy(status, "File Syntax Error");
+            break;
+        case 405:
+            strcpy(status, "Command only available in the STARTUP phase!");
+            break;
+        case 406:
+            strcpy(status, "Command only available in the PLAY phase!");
             break;
         case 500:
             strcpy(status, "Internal Error");
@@ -258,8 +264,8 @@ int readCommand() {
     CommandNode commandNode = {.command = NONE};
     int statusCode = -1;
     if (strstr(command, "LD") != NULL) {
+        commandNode.command = LD;
         if (currentPhase == STARTUP) {
-            commandNode.command = LD;
             if (strstr(command, " ") != NULL) {
                 char *arg = strtok(command, " ");
                 char path[100];
@@ -270,17 +276,16 @@ int readCommand() {
                 statusCode = LDCommand(path);
             } else { statusCode = LDCommand(NULL); }
         } else {
-            printf("Command only available in the STARTUP phase!\n");
+            statusCode = 405;
         }
 
     } else if (strstr(command, "SW") != NULL) {
         commandNode.command = SW;
         statusCode = SWCommand();
     } else if (strstr(command, "SI") != NULL) {
+        commandNode.command = SI;
         //TODO fix this at some point idk when, but please let anyone but me fix it :)
-
         if (currentPhase == STARTUP) {
-            commandNode.command = SI;
             if (strstr(command, " ") != NULL) {
                 char *arg = strtok(command, " ");
                 int integer;
@@ -292,18 +297,18 @@ int readCommand() {
             } else { statusCode = SICommand(52/2); }
 
         } else {
-            printf("Command only available in the STARTUP phase!\n");
+            statusCode = 405;
         }
     } else if (strstr(command, "SR") != NULL) {
+        commandNode.command = SR;
         if (currentPhase == STARTUP) {
-            commandNode.command = SR;
             statusCode = SRCommand();
         } else {
-            printf("Command only available in the STARTUP phase!\n");
+            statusCode = 405;
         }
     } else if (strstr(command, "SD") != NULL) {
+        commandNode.command = SD;
         if (currentPhase == STARTUP) {
-            commandNode.command = SD;
             if (strstr(command, " ") != NULL) {
                 char *arg = strtok(command, " ");
                 char path[100];
@@ -315,34 +320,33 @@ int readCommand() {
                 statusCode = SDCommand(path);
             } else { statusCode = SDCommand(NULL); }
         } else {
-            printf("Command only available in the STARTUP phase!\n");
+            statusCode = 405;
         }
     } else if (strstr(command, "QQ") != NULL) {
+        commandNode.command = QQ;
         if (currentPhase == STARTUP) {
-            commandNode.command = QQ;
             statusCode = QQCommand();
         } else {
-            printf("Command only available in the STARTUP phase!\n");
+            statusCode = 405;
         }
     } else if (strstr(command, "P") != NULL) {
+        commandNode.command = P;
         if (currentPhase == STARTUP) {
-            commandNode.command = P;
             statusCode = PCommand();
         } else {
-            printf("Command only available in the STARTUP phase!\n");
+            statusCode = 405;
         }
     } else if (strstr(command, "Q") != NULL) {
+        commandNode.command = Q;
         if (currentPhase == PLAY) {
-            commandNode.command = Q;
             statusCode = QCommand();
         } else {
-            printf("Command only available in the PLAY phase!\n");
+            statusCode = 406;
         }
     // Move command
     } else if (strchr(command, '-') != NULL && strchr(command, '>') != NULL) {
+        commandNode.command = MOVE;
         if (currentPhase == PLAY) {
-            commandNode.command = MOVE;
-
             bool force = false;
             if (strstr(command, "!!") != NULL) {
                 force = true;
@@ -360,25 +364,25 @@ int readCommand() {
             moveHistory->next = &commandNode;
             moveHistory = &commandNode;
         } else {
-            printf("Command only available in the PLAY phase!\n");
+            statusCode = 406;
         }
     } else if (strstr(command, "U") != NULL) {
+        commandNode.command = U;
         if (currentPhase == PLAY) {
-            commandNode.command = U;
             statusCode = UCommand();
         } else {
-            printf("Command only available in the PLAY phase!\n");
+            statusCode = 406;
         }
     } else if (strstr(command, "R") != NULL) {
+        commandNode.command = R;
         if (currentPhase == PLAY) {
-            commandNode.command = R;
             statusCode = RCommand();
         } else {
-            printf("Command only available in the PLAY phase!\n");
+            statusCode = 406;
         }
     } else if (strstr(command, "S") != NULL) {
+        commandNode.command = S;
         if (currentPhase == PLAY) {
-            commandNode.command = S;
             if (strstr(command, " ") != NULL) {
                 char *arg = strtok(command, " ");
                 char path[100];
@@ -389,11 +393,11 @@ int readCommand() {
                 statusCode = SCommand(path);
             } else { statusCode = SCommand(NULL); }
         } else {
-            printf("Command only available in the PLAY phase!\n");
+            statusCode = 406;
         }
     } else if (strstr(command, "L") != NULL) {
+        commandNode.command = L;
         if (currentPhase == PLAY) {
-            commandNode.command = L;
             if (strstr(command, " ") != NULL) {
                 char *arg = strtok(command, " ");
                 char path[100];
@@ -404,7 +408,7 @@ int readCommand() {
                 statusCode = LCommand(path);
             }
         } else {
-            printf("Command only available in the PLAY phase!\n");
+            statusCode = 406;
         }
     } else if (strstr(command, "DEBUG") != NULL) {
         switchCardStorage();
