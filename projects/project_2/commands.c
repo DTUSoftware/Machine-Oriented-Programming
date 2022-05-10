@@ -20,11 +20,11 @@ int LDCommand(char *fileName) {
     // clear the deck as well
     clearDeck();
 
-    bool malloced = false;
+    bool using_default = false;
     if (fileName == NULL) {
         // load unshuffled deck of cards
         fileName = malloc(sizeof(char)*35);
-        malloced = true;
+        using_default = true;
         strcpy(fileName, "examples/decks/unshuffled.txt");
     }
 
@@ -47,14 +47,14 @@ int LDCommand(char *fileName) {
             // add cards to deck
             addStatus = addCardsToDeck(cards);
         }
-        if (addStatus != 200) {
-            printf("Warning: Could not find unshuffled.txt in examples/decks - loading unallocated unshuffled...\n");
+        if (addStatus != 200 && using_default) {
+            printf("Warning: Could not find unshuffled.txt in 'examples/decks/' - loading unallocated unshuffled...\n");
             addStatus = addCardsToDeck(allCards);
         }
         free(fileName2);
     }
 
-    if (malloced) {
+    if (using_default) {
         free(fileName);
     }
 
