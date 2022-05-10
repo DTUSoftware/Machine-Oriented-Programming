@@ -284,11 +284,23 @@ int MCommand(char *command, bool fromBottom, bool force) {
         toPile = command[4];
         toColumn = atol(&command[5]);
 
-        CardNode *bottomNode = columns[column - 1];
-        while (bottomNode->next) {
-            bottomNode = bottomNode->next;
+        switch (pile) {
+            case 'C':
+            {
+                CardNode *bottomNode = columns[column - 1];
+                while (bottomNode->next) {
+                    bottomNode = bottomNode->next;
+                }
+                card = bottomNode->card;
+                break;
+            }
+            case 'F':
+                card = foundations[column-1]->card;
+                break;
         }
-        card = bottomNode->card;
+    }
+    else if (pile == 'F') {
+        return 402;
     }
     else {
         toPile = command[7];
@@ -326,7 +338,7 @@ int MCommand(char *command, bool fromBottom, bool force) {
             break;
         case 'F':
             currentCard = foundations[column - 1];
-            if (currentCard->card->number != card->number && currentCard->card->suit != card->suit) {
+            if (currentCard->card->number != card->number || currentCard->card->suit != card->suit) {
                 if (!fromBottom) free(card);
                 return 402;
             }
