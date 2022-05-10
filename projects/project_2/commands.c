@@ -46,9 +46,10 @@ int LDCommand(char *fileName) {
         if (loadStatus == 200) {
             // add cards to deck
             addStatus = addCardsToDeck(cards);
-//                if (addStatus != 200) {
-//                    addStatus = addCardsToDeck(allCards);
-//                }
+        }
+        if (addStatus != 200) {
+            printf("Warning: Could not find unshuffled.txt in examples/decks - loading unallocated unshuffled...\n");
+            addStatus = addCardsToDeck(allCards);
         }
         free(fileName2);
     }

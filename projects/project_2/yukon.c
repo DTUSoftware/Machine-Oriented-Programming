@@ -27,7 +27,7 @@ int clearDeck() {
         CardNode *cardNode = columns[i];
         while (cardNode) {
             CardNode *next = cardNode->next;
-            // TODO: fix so this free of card doesn't break the code
+            // TODO: fix so this free of card doesn't break the code - requires not using AllCards as well
 //            free(cardNode->card);
             free(cardNode);
             cardNode = next;
