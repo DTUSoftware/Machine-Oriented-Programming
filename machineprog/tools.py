@@ -92,6 +92,14 @@ class Binary:
                 self.binary = self.binary.rjust(self.bits, "1")
 
 
+class Hex:
+    def __init__(self, hex: str = ""):
+        self.hex = hex
+
+    def set_hex_from_decimal(self, decimal: int):
+        self.hex = hex(decimal)[2:]
+
+
 if __name__ == "__main__":
     binary = Binary("00101")
     print(binary.binary)
@@ -103,5 +111,9 @@ if __name__ == "__main__":
     print(binary2.binary)
     binary2.set_binary_from_decimal(-104)
     print(binary2.binary)
+
+    hexNum = Hex()
+    hexNum.set_hex_from_decimal(86)
+    print(hexNum.hex)
 
 
