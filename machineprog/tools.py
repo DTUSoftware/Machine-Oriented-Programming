@@ -91,6 +91,17 @@ class Binary:
             else:
                 self.binary = self.binary.rjust(self.bits, "1")
 
+    def print(self):
+        binary_string = ""
+        j = 0
+        for i in range(len(self.binary)-1, -1, -1):
+            binary_string = self.binary[i] + binary_string
+            j += 1
+            if j == 4:
+                binary_string = " " + binary_string
+        binary_string = binary_string.strip()
+        print(binary_string)
+
 
 class Hex:
     def __init__(self, hex: str = ""):
@@ -99,21 +110,24 @@ class Hex:
     def set_hex_from_decimal(self, decimal: int):
         self.hex = hex(decimal)[1:]
 
+    def print(self):
+        print(self.hex)
+
 
 if __name__ == "__main__":
     binary = Binary("00101")
-    print(binary.binary)
+    binary.print()
     binary.invert()
-    print(binary.binary)
+    binary.print()
 
     binary2 = Binary()
     binary2.set_binary_from_decimal(104)
-    print(binary2.binary)
+    binary2.print()
     binary2.set_binary_from_decimal(-104)
-    print(binary2.binary)
+    binary2.print()
 
     hexNum = Hex()
     hexNum.set_hex_from_decimal(86)
-    print(hexNum.hex)
+    hexNum.print()
 
 
