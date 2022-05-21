@@ -1,3 +1,99 @@
+        .ORIG x3000
+        LD      R6, US_S    ; initialize pointer
+start   JSR     readS
+        JSR     isPrime
+        JSR     resultS
+        BRnzp   start
+US_S    .FILL   xFE00       ; the stack pointer
+;
+; --------------------------- Assignment 2 -------------------------------- ;
+;
+; reads up to 5 seperate digits from the input, and makes it into a decimal number
+; breaks when nothing is entered
+;
+; input: two digits read from input I/O device
+; output: R0 - the decimal number
+readS   ADD     R6, R6, #-1 ; store used registers onto the stack
+        STR     R1, R6, #0
+        ADD     R6, R6, #-1
+        STR     R2, R6, #0
+        ADD     R6, R6, #-1
+        STR     R3, R6, #0
+;
+; prints console initial output
+        LEA     R0, PROMPT
+        TRAP    x22
+        LD      R0, NEWLINE
+        TRAP    x21
+        AND     R3, R3, #0      ; COUNTER
+;
+        LD      R2, ASCII       ; ascii to convert to number
+        NOT     R2, R2
+        ADD     R2, R2, #1
+READ    AND     R0, R0, #0
+        TRAP    x23             ; read
+        TRAP    x21             ; print
+        LD      R1, NEWLINE
+        NOT     R1, R1
+        ADD     R1, R1, #1
+        ADD     R1, R1, R0      ; check if the input is a newline (end of number)
+        BRz     CONVN
+        ADD     R0, R0, R2      ; change the number to decimal
+        ADD     R3, R3, #1      ; increase COUNTER
+        ADD     R6, R6, #-1     ; store the
+        STR     R0, R6, #0      ; decimal on the stack
+        BRnzp   READ
+; add the seperate numbers together
+CONVN   AND     R2, R2, #0  ; to hold the number to return
+        AND     R1, R1, #0  ; initialize multiplier
+        ADD     R1, R1, #1
+CONVNr  LDR     R0, R6, #0  ; load decimal number
+        ADD     R6, R6, #1  ; from the stack
+        ADD     R6, R6, #-1 ; store R7 (ret pointer)
+        STR     R7, R6, #0  ; onto the stack
+        JSR     MUL
+        LDR     R7, R6, #0  ; restore R7 (ret pointer)
+        ADD     R6, R6, #1  ; from the stack
+        ADD     R2, R2, R0  ; add to the final number
+        ADD     R3, R3, #-1 ; decrease COUNTER
+        BRnz    END
+; set multiplier up
+        AND     R0, R0, #0
+        ADD     R0, R0, #10
+        ADD     R6, R6, #-1 ; store R7 (ret pointer)
+        STR     R7, R6, #0  ; onto the stack
+        JSR     MUL
+        LDR     R7, R6, #0  ; restore R7 (ret pointer)
+        ADD     R6, R6, #1  ; from the stack
+        ADD     R1, R0, #0  ; put new multiplier into R1
+        BRnzp   CONVNr
+;
+END     ADD     R0, R2, #0  ; put final number into return register
+        LDR     R3, R6, #0  ; restore registers from the stack
+        ADD     R6, R6, #1
+        LDR     R2, R6, #0
+        ADD     R6, R6, #1
+        LDR     R1, R6, #0
+        ADD     R6, R6, #1
+        RET
+;
+; ------------------------------ Assignment 4 ------------------------------- ;
+;
+; displays on the console, whether the given argument is prime or not
+;
+; input: R0 - the number to check
+resultS ADD     R0, R0, #0
+        BRz     resSN
+        LEA     R0, resP
+        BRnzp   resSP
+resSN   LEA     R0, resNP
+resSP   TRAP    x22
+        LD      R0, NEWLINE
+        TRAP    x21
+        RET
+;
+; --------------------------- Assignment 3 -------------------------------- ;
+;
 ; function to check if a given number is a prime number
 ;
 ; input: R0 - the number to check
@@ -96,6 +192,8 @@ MUL     ; if R1 is 0, return R1
 ; save registers
         ADD     R6, R6, #-1 ; store R2
         STR     R2, R6, #0  ; onto the stack
+        ADD     R6, R6, #-1 ; store R1
+        STR     R1, R6, #0  ; onto the stack (we can restore it)
 ;
         AND     R2, R2, #0  ; load R0 into R2
         ADD     R2, R0, #0
@@ -106,6 +204,8 @@ repMUL  ADD     R0, R0, R2
         BRp     repMUL
 ;
 ; restore registers
+        LDR     R1, R6, #0  ; restore R1
+        ADD     R6, R6, #1  ; from the stack
         LDR     R2, R6, #0  ; restore R2
         ADD     R6, R6, #1  ; from the stack
         RET
@@ -126,4 +226,11 @@ repM    ADD     R0, R0, R1
         BRp     repM
         RET
 ;
-US_S    .FILL   xFE00       ; the stack pointer
+; -------------------------- variables for precompile ---------- ;
+;
+NEWLINE .FILL x000A
+ASCII   .FILL x0030
+PROMPT  .STRINGZ "Input a decimal number up to 5 digits:"
+resP    .STRINGZ "The number is prime"
+resNP   .STRINGZ "The number is not prime"
+        .END

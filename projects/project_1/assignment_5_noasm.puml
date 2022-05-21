@@ -1,0 +1,24 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+
+:initialize R6 with
+stack pointer;
+
+repeat
+    :JSR readS
+    (assignment 2);
+
+    :JSR isPrime
+    (assignment 3);
+
+    :JSR resultS
+    (assignment 4);
+
+    repeat while (true) is (true);
+    -> false;
+stop
+
+
+@enduml

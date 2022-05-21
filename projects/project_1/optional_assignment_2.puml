@@ -1,0 +1,76 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+    :STRINGZ "Input a 2 digit
+    decimal number:";
+
+    :Load string into R0;
+
+    :TRAP x22 (PUTS)
+    to write to display;
+
+    :Load newline into R0;
+
+    :TRAP x21 (OUT)
+    to write to display;
+
+    :Initialize R3 as counter;
+
+    :Load -x30 (-ASCII) into R2;
+
+    repeat :TRAP x23 (IN) to get digit;
+        :TRAP x21 (OUT) to echo the digit;
+
+        :Load -x0A (-NEWLINE) into R1;
+
+        if (input is newline (R1-R0 == 0)) then (true);
+            break;
+        else (false)
+        endif;
+
+        :Subtract x30 (R2) (ASCII digit to int) from R0;
+
+        if (R0 < 0 || R0 > 9) then (true);
+            :Set R0 to -1;
+            stop;
+        else (false)
+        endif;
+
+        :Increase counter (R3);
+
+        if (counter > 5) then (true);
+            :Set R0 to -1;
+            stop;
+        else (false)
+        endif;
+
+        :Store the integer on the stack;
+
+        repeat while (true) is (true);
+
+    :Initialize R2 to 0;
+
+    :Initialize multiplier (R1) to 1;
+
+    repeat :Load decimal number from stack;
+        :Multiply decimal number by multiplier;
+
+        :Decrease counter (R3);
+
+        if (counter == 0) then (true)
+            break
+        else (false)
+        endif
+
+        :Multiply multiplier (R3) by 10;
+
+        repeat while (true) is (true);
+
+    :Add R2 to R0;
+
+    :Return R0;
+stop
+
+
+@enduml

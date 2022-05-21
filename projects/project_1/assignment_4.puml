@@ -1,0 +1,20 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+    if (R0 == 0) then (true)
+        :Load R0 with
+        "The number is not prime";
+    else (false)
+        :Load R0 with
+        "The number is prime";
+    endif;
+
+    :Trap x22 (PUTS);
+
+    :Load R0 with NEWLINE;
+
+    :Trap x21 (OUT);
+stop
+
+@enduml
