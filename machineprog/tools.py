@@ -97,7 +97,7 @@ class Hex:
         self.hex = hex
 
     def set_hex_from_decimal(self, decimal: int):
-        self.hex = hex(decimal)[2:]
+        self.hex = hex(decimal)[1:]
 
 
 if __name__ == "__main__":
