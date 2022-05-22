@@ -171,11 +171,11 @@ class Hex:
 
 
 if __name__ == "__main__":
-    # binary = Binary("0000000000001010")
-    # binary.print()
-    # print(binary.to_decimal())
-    # binary.invert()
-    # binary.print()
+    binary = Binary("0000000000001010")
+    binary.print()
+    print(binary.to_decimal())
+    binary.invert()
+    binary.print()
 
     binary2 = Binary()
     binary2.set_binary_from_decimal(-104)
@@ -185,13 +185,13 @@ if __name__ == "__main__":
     binary2.print()
     print(binary2.to_decimal())
 
-    # binary3 = Binary()
-    # binary3.set_binary_from_decimal(104)
-    # binary2.subtract(binary3)
-    # binary2.print()
-    #
-    # hexNum = Hex()
-    # hexNum.set_hex_from_decimal(86)
-    # hexNum.print()
+    binary3 = Binary()
+    binary3.set_binary_from_decimal(104)
+    binary2.subtract(binary3)
+    binary2.print()
+
+    hexNum = Hex()
+    hexNum.set_hex_from_decimal(86)
+    hexNum.print()
 
 
