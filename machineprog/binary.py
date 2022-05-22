@@ -1,5 +1,4 @@
-import numpy as np
-
+import math
 
 def printb(binary: str):
     print(pybin_to_bin(binary))
@@ -93,13 +92,13 @@ def decimal_to_binary2c(decimal: int, bits: int = None):
 
     neg = decimal < 0
     if neg:
-        decimal = np.abs(decimal)
+        decimal = abs(decimal)
 
     binary = ''
     ones = []
     while decimal > 0:
         largest_power = largest_power_of_two(decimal)
-        ones.append(int(np.log2(largest_power)))
+        ones.append(int(math.log2(largest_power)))
         decimal = decimal - largest_power
 
     binary = binary.zfill(ones[0])
@@ -127,7 +126,7 @@ def decimal_to_binary2c_division(decimal: int, bits: int = None):
     """
     neg = decimal < 0
     if neg:
-        decimal = np.abs(decimal)
+        decimal = abs(decimal)
 
     binary = ''
 
