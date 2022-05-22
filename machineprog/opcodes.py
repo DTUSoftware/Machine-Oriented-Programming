@@ -280,7 +280,10 @@ opcodes = [
 ]
 
 
-def get_opcode(binary):
+def get_opcode(binary: str):
+    if binary.lower().startswith("x"):
+        binary = binary.split()[1]
+
     for opcode in opcodes:
         opcode.set_binary(binary)
         if opcode.is_valid():

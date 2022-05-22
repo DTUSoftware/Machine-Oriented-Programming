@@ -4,7 +4,25 @@ class Binary:
         self.bits = bits
         self.binary_array = []
 
-        self.set_binary(binary)
+        # Trim
+        if len(self.binary) > self.bits:
+            # print("BINARY STRING IS LARGER THAN BIT COUNT, CHECKING FOR POSSIBLE TRIM")
+            trim_possible = True
+            i = len(self.binary)
+            starts_with = self.binary[0]
+            while i+1 > self.bits:
+                if self.binary[abs(i-len(self.binary))] != starts_with:
+                    trim_possible = False
+                    break
+                i -= 1
+            if trim_possible:
+                # print("Trim possible :)")
+                self.binary = self.binary[-self.bits:]
+            else:
+                # print("TRIM NOT POSSIBLE!!! >:( - raising bits")
+                self.bits = len(self.binary)
+
+        self.set_binary(self.binary)
 
     def set_binary_from_decimal(self, decimal: int):
         neg = decimal < 0
@@ -112,12 +130,12 @@ class Binary:
 
     def to_decimal(self):
         neg = False
-        if self.binary[0] == 1:
+        if self.binary[0] == "1":
             self.invert()
             neg = True
 
         decimal = 0
-        for i in range(len(self.binary)):
+        for i in range(self.bits):
             if self.binary[i] == "1":
                 # print(f"{decimal} + 2^{abs(i-self.bits)-1}")
                 decimal += 2**(abs(i-self.bits)-1)
@@ -136,6 +154,7 @@ class Binary:
             j += 1
             if j == 4:
                 binary_string = " " + binary_string
+                j = 0
         binary_string = binary_string.strip()
         print(binary_string)
 
@@ -152,14 +171,16 @@ class Hex:
 
 
 if __name__ == "__main__":
-    binary = Binary("00101")
+    binary = Binary("0000000000001010")
     binary.print()
+    print(binary.to_decimal())
     binary.invert()
     binary.print()
 
     binary2 = Binary()
     binary2.set_binary_from_decimal(-104)
     binary2.print()
+    print(binary2.to_decimal())
     binary2.set_binary_from_decimal(104)
     binary2.print()
     print(binary2.to_decimal())
